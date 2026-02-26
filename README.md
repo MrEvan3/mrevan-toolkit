@@ -1,14 +1,15 @@
-# Mr Evan Intelligent Repair System
+# 🛠️ Mr Evan Intelligent Repair System (v2.1.0)
 
-Console interativo em PowerShell para manutenção preventiva e corretiva do Windows (10 e 11): limpeza, reparos, segurança, ferramentas gamer e utilitários do sistema.
+Console interativo avançado em PowerShell para manutenção preventiva, corretiva e otimização extrema do Windows (10 e 11). Desenvolvido por **Evandro Lemos**.
 
-## Como executar
+Transforme seu terminal em um verdadeiro canivete suíço para sysadmins, técnicos e power users!
 
-**Uma linha no PowerShell (recomendado):**
+## 🚀 Como executar
+
+Abra o seu PowerShell **como Administrador** (obrigatório para a maioria das funções) e rode o comando abaixo:
 
 ```powershell
-irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
-```
+irm "[https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1](https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1)" | iex
 
 Execute o PowerShell **como Administrador** para usar todas as funções.
 

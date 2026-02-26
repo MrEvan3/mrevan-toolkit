@@ -67,14 +67,47 @@ function Show-Header {
     Clear-Host
     Write-Host ""
     Write-Separator
-    Show-Center "Mr Evan" "Red"
-    Show-Center "Intelligent Repair System" "Red"
+    
+    # Mr Evan em destaque (Blocos Unicode)
+    Show-Center "█▀▄▀█ █▀█   █▀▀ █░█ ▄▀█ █▄░█" "Red"
+    Show-Center "█░▀░█ █▀▄   ██▄ ▀▄▀ █▀█ █░▀█" "Red"
     Write-Host ""
+    
+    Show-Center "Intelligent Repair System" "Red"
+    Show-Center "Created by Evandro Lemos" "DarkGray"
+    Write-Host ""
+    
     Show-Center "Versao $MRIRS_Version  |  Windows 10/11" "Gray"
     Write-Separator
     Show-Center "Use os numeros para navegar. 0 sempre volta/sai." "Gray"
     Write-Separator
     Write-Host ""
+}
+
+function Disable-VBS {
+    Write-Host "Desativando Virtualization-Based Security (VBS)..." -ForegroundColor Cyan
+    try {
+        bcdedit /set hypervisorlaunchtype off | Out-Null
+        New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 0 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        Write-Host "VBS desativado. Reinicie o PC para aplicar o ganho de FPS." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Disable-BackgroundApps {
+    Write-Host "Matando apps em segundo plano..." -ForegroundColor Cyan
+    try {
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        Write-Host "Apps em segundo plano desativados com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Disable-SearchIndexing {
+    Write-Host "Desativando Indexação do Windows (WSearch)..." -ForegroundColor Cyan
+    try {
+        Stop-Service WSearch -Force -ErrorAction SilentlyContinue
+        Set-Service WSearch -StartupType Disabled -ErrorAction SilentlyContinue
+        Write-Host "Indexação desativada (Ideal para SSDs)." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
 }
 
 function Show-MainMenu {
@@ -96,7 +129,10 @@ function Show-MainMenu {
     Write-Host " - Mostra pecas, gargalo e saude do sistema" -ForegroundColor Gray
     Write-Host " [6] UTILITARIOS EXTRAS    " -ForegroundColor Cyan -NoNewline
     Write-Host " [EXTRAS]" -ForegroundColor DarkCyan -NoNewline
-    Write-Host " - Limpeza de disco, tarefas, programas e mais" -ForegroundColor Gray
+    Write-Host " - Limpeza de disco, tarefas, programas e mais" -ForegroundColor Gray 
+    Write-Host " [7] MODO TECNICO AVANCADO " -ForegroundColor Cyan -NoNewline
+    Write-Host " [DANGER]" -ForegroundColor Red -NoNewline
+    Write-Host " - Reparos profundos, debloat e reset de rede" -ForegroundColor Gray
     Write-Host ""
     Write-Host " [0] SAIR                  " -ForegroundColor Red -NoNewline
     Write-Host " [---]" -ForegroundColor DarkGray -NoNewline
@@ -809,6 +845,54 @@ function Open-ExtrasMenu {
         Write-Host " [0] Voltar ao menu principal" -ForegroundColor Yellow
         Write-Host ""
 
+        # ------------------ BLOCO: MODO TÉCNICO / AVANÇADO ------------------
+
+        function Open-TechMenu {
+    do {
+        Show-Header
+        Write-Host "=== MODO TÉCNICO AVANÇADO (CUIDADO) ===" -ForegroundColor Red
+        Write-Host ""
+        Write-Host " --- DEBLOAT EXTREMO ---" -ForegroundColor DarkGray
+        Write-Host " [1] Desativar VBS (Ganha FPS em jogos)" -ForegroundColor Cyan
+        Write-Host " [2] Matar Apps em Segundo Plano" -ForegroundColor Cyan
+        Write-Host " [3] Desabilitar Indexação do Windows (WSearch)" -ForegroundColor Cyan
+        Write-Host " --- REPAROS E INTERFACE ---" -ForegroundColor DarkGray
+        Write-Host " [4] Limpeza Nuclear do Windows Update" -ForegroundColor Cyan
+        Write-Host " [5] Reset Completo da Pilha de Rede" -ForegroundColor Cyan
+        Write-Host " [6] Limpar TODOS os Logs de Eventos" -ForegroundColor Cyan
+        Write-Host " [7] Cortar a Web do Menu Iniciar" -ForegroundColor Cyan
+        Write-Host " [8] Restaurar Clique Direito Clássico (Win 11)" -ForegroundColor Cyan
+        Write-Host " --- MODO PÂNICO E DIAGNÓSTICO ---" -ForegroundColor DarkGray
+        Write-Host " [9] Gerar Relatório de Saúde da Bateria" -ForegroundColor Cyan
+        Write-Host " [10] Leitura S.M.A.R.T. dos Discos" -ForegroundColor Cyan
+        Write-Host " [11] Reset Total do Firewall" -ForegroundColor Cyan
+        Write-Host " [12] Desbloquear a Conta Super Administrador" -ForegroundColor Cyan
+        Write-Host " [13] Forçar Próximo Boot em Modo de Segurança" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host " [0] Voltar ao menu principal" -ForegroundColor DarkYellow
+        Write-Host ""
+
+        $opt = Read-Host "Escolha uma opção"
+        switch ($opt) {
+            "1" { Disable-VBS; Pause-MR }
+            "2" { Disable-BackgroundApps; Pause-MR }
+            "3" { Disable-SearchIndexing; Pause-MR }
+            "4" { Run-NuclearCleanup; Pause-MR }
+            "5" { Reset-NetworkStack; Pause-MR }
+            "6" { Clear-AllEventLogs; Pause-MR }
+            "7" { Disable-WebSearch; Pause-MR }
+            "8" { Restore-ClassicContextMenu; Pause-MR }
+            "9" { Get-BatteryReport; Pause-MR }
+            "10" { Get-SmartStatus; Pause-MR }
+            "11" { Reset-FirewallTotal; Pause-MR }
+            "12" { Enable-SuperAdmin; Pause-MR }
+            "13" { Set-SafeModeBoot; Pause-MR }
+            "0" { return }
+            default { Write-Host "Opção inválida." -ForegroundColor Red; Pause-MR }
+        }
+    } while ($true)
+}
+
         $opt = Read-Host "Escolha uma opção"
         switch ($opt) {
             "1" { Start-Process cleanmgr.exe }
@@ -828,17 +912,14 @@ function Open-ExtrasMenu {
 
 # ------------------ LOOP PRINCIPAL ------------------
 
-do {
-    Show-MainMenu
-    $choice = Read-Host "Digite o número da opção desejada"
-
-    switch ($choice) {
+switch ($choice) {
         "1" { Open-OptimizeMenu }
         "2" { Open-ActivatorMenu }
         "3" { Open-GamerMenu }
         "4" { Open-SystemToolsMenu }
         "5" { Open-DiagnosticsMenu }
         "6" { Open-ExtrasMenu }
+        "7" { Open-TechMenu } # <- NOVA OPÇÃO AQUI
         "0" { break }
         default {
             Write-Host "Opção inválida. Digite um número do menu." -ForegroundColor Red

@@ -1,3 +1,19 @@
+# 🛠️ Mr Evan Intelligent Repair System (v2.1.0)
+
+Bem-vindo ao **Mr Evan Intelligent Repair System**, um console interativo e avançado em PowerShell criado para otimizar, reparar e extrair o máximo de desempenho do Windows 10 e 11. 
+
+Desenvolvido por **Evandro Lemos**, este toolkit centraliza dezenas de comandos complexos em um menu simples e direto, funcionando como um verdadeiro canivete suíço para técnicos de TI, gamers e power users.
+
+---
+
+## 🚀 Como executar
+
+Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o **PowerShell como Administrador** e colar o comando abaixo:
+
+```powershell
+ irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
+
+
 ✨ Funcionalidades Detalhadas
 O sistema é modular e dividido em 7 categorias principais. Abaixo, detalhamos o que cada ferramenta faz no seu sistema:
 

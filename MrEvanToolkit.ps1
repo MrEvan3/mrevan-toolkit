@@ -1,7 +1,7 @@
 <# 
   Mr Evan Intelligent Repair System
   Console avançado de manutenção e otimização para Windows 10 e 11.
-  Autor: MR EVAN + IA
+  Autor: Evandro Lemos + IA
 #>
 
 $ErrorActionPreference = "Stop"
@@ -84,32 +84,6 @@ function Show-Header {
     Write-Host ""
 }
 
-function Disable-VBS {
-    Write-Host "Desativando Virtualization-Based Security (VBS)..." -ForegroundColor Cyan
-    try {
-        bcdedit /set hypervisorlaunchtype off | Out-Null
-        New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 0 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
-        Write-Host "VBS desativado. Reinicie o PC para aplicar o ganho de FPS." -ForegroundColor Green
-    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
-}
-
-function Disable-BackgroundApps {
-    Write-Host "Matando apps em segundo plano..." -ForegroundColor Cyan
-    try {
-        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
-        Write-Host "Apps em segundo plano desativados com sucesso." -ForegroundColor Green
-    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
-}
-
-function Disable-SearchIndexing {
-    Write-Host "Desativando Indexação do Windows (WSearch)..." -ForegroundColor Cyan
-    try {
-        Stop-Service WSearch -Force -ErrorAction SilentlyContinue
-        Set-Service WSearch -StartupType Disabled -ErrorAction SilentlyContinue
-        Write-Host "Indexação desativada (Ideal para SSDs)." -ForegroundColor Green
-    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
-}
-
 function Show-MainMenu {
     Show-Header
     Write-Host " [1] OTIMIZAR AGORA        " -ForegroundColor Cyan -NoNewline
@@ -129,7 +103,7 @@ function Show-MainMenu {
     Write-Host " - Mostra pecas, gargalo e saude do sistema" -ForegroundColor Gray
     Write-Host " [6] UTILITARIOS EXTRAS    " -ForegroundColor Cyan -NoNewline
     Write-Host " [EXTRAS]" -ForegroundColor DarkCyan -NoNewline
-    Write-Host " - Limpeza de disco, tarefas, programas e mais" -ForegroundColor Gray 
+    Write-Host " - Limpeza de disco, tarefas, programas e mais" -ForegroundColor Gray
     Write-Host " [7] MODO TECNICO AVANCADO " -ForegroundColor Cyan -NoNewline
     Write-Host " [DANGER]" -ForegroundColor Red -NoNewline
     Write-Host " - Reparos profundos, debloat e reset de rede" -ForegroundColor Gray
@@ -845,9 +819,153 @@ function Open-ExtrasMenu {
         Write-Host " [0] Voltar ao menu principal" -ForegroundColor Yellow
         Write-Host ""
 
-        # ------------------ BLOCO: MODO TÉCNICO / AVANÇADO ------------------
+        $opt = Read-Host "Escolha uma opção"
+        switch ($opt) {
+            "1" { Start-Process cleanmgr.exe }
+            "2" { Start-Process "ms-settings:storage" }
+            "3" { Start-Process taskmgr.exe }
+            "4" { Start-Process appwiz.cpl }
+            "5" { Start-Process "windowsdefender:" }
+            "6" { Start-Process SystemPropertiesPerformance.exe }
+            "0" { return }
+            default {
+                Write-Host "Opção inválida." -ForegroundColor Red
+                Pause-MR
+            }
+        }
+    } while ($true)
+}
 
-        function Open-TechMenu {
+# ------------------ BLOCO: MODO TÉCNICO / AVANÇADO ------------------
+
+function Disable-VBS {
+    Write-Host "Desativando Virtualization-Based Security (VBS)..." -ForegroundColor Cyan
+    try {
+        bcdedit /set hypervisorlaunchtype off | Out-Null
+        New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 0 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        Write-Host "VBS desativado. Reinicie o PC para aplicar o ganho de FPS." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Disable-BackgroundApps {
+    Write-Host "Matando apps em segundo plano..." -ForegroundColor Cyan
+    try {
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        Write-Host "Apps em segundo plano desativados com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Disable-SearchIndexing {
+    Write-Host "Desativando Indexação do Windows (WSearch)..." -ForegroundColor Cyan
+    try {
+        Stop-Service WSearch -Force -ErrorAction SilentlyContinue
+        Set-Service WSearch -StartupType Disabled -ErrorAction SilentlyContinue
+        Write-Host "Indexação desativada (Ideal para SSDs)." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Run-NuclearCleanup {
+    Write-Host "Iniciando Limpeza Nuclear (ResetBase)... Isso pode demorar!" -ForegroundColor Red
+    try {
+        DISM.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+        Write-Host "Limpeza nuclear concluída. Atualizações antigas destruídas." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-NetworkStack {
+    Write-Host "Resetando Pilha de Rede (Winsock/IP)..." -ForegroundColor Cyan
+    try {
+        netsh winsock reset | Out-Null
+        netsh int ip reset | Out-Null
+        ipconfig /release | Out-Null
+        ipconfig /renew | Out-Null
+        ipconfig /flushdns | Out-Null
+        Write-Host "Rede resetada de fábrica com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Clear-AllEventLogs {
+    Write-Host "Limpando TODOS os Logs de Eventos do Windows..." -ForegroundColor Cyan
+    try {
+        Get-WinEvent -ListLog * -Force -ErrorAction SilentlyContinue | Where-Object { $_.RecordCount -gt 0 } | ForEach-Object {
+            wevtutil cl $_.LogName
+        }
+        Write-Host "Logs de eventos completamente apagados. Ficha limpa!" -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Set-SafeModeBoot {
+    Write-Host "Configurando boot para MODO DE SEGURANÇA (com rede)..." -ForegroundColor Yellow
+    try {
+        bcdedit /set "{default}" safeboot network | Out-Null
+        Write-Host "O PC iniciará em Modo de Segurança no próximo boot." -ForegroundColor Green
+        Write-Host "DICA: Para reverter depois, digite no terminal: bcdedit /deletevalue {default} safeboot" -ForegroundColor DarkGray
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Disable-WebSearch {
+    Write-Host "Cortando a Web do Menu Iniciar..." -ForegroundColor Cyan
+    try {
+        $path = "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
+        if (-not (Test-Path $path)) { New-Item -Path $path -Force | Out-Null }
+        New-ItemProperty -Path $path -Name "DisableSearchBoxSuggestions" -Value 1 -PropertyType DWord -Force | Out-Null
+        Write-Host "Pesquisa Web desativada. Reinicie o Windows Explorer para aplicar." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Restore-ClassicContextMenu {
+    Write-Host "Restaurando Clique Direito Clássico (Win 11)..." -ForegroundColor Cyan
+    try {
+        New-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" -Force | Out-Null
+        Write-Host "Menu clássico restaurado. Reinicie o Windows Explorer para aplicar." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Get-BatteryReport {
+    Write-Host "Gerando relatório detalhado de saúde da bateria..." -ForegroundColor Cyan
+    try {
+        $outPath = "$env:USERPROFILE\Desktop\BatteryReport.html"
+        powercfg /batteryreport /output $outPath | Out-Null
+        Write-Host "Relatório salvo em: $outPath" -ForegroundColor Green
+        Start-Process $outPath
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Get-SmartStatus {
+    Write-Host "Lendo status S.M.A.R.T. dos discos físicos..." -ForegroundColor Cyan
+    Write-Host ""
+    try {
+        Get-PhysicalDisk | Format-Table DeviceId, MediaType, OperationalStatus, HealthStatus -AutoSize
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-FirewallTotal {
+    Write-Host "Resetando regras do Firewall para o padrão de fábrica..." -ForegroundColor Red
+    try {
+        netsh advfirewall reset | Out-Null
+        Write-Host "Firewall resetado com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Enable-SuperAdmin {
+    Write-Host "Desbloqueando a conta de Super Administrador..." -ForegroundColor Yellow
+    try {
+        net user administrador /active:yes 2>$null
+        net user administrator /active:yes 2>$null
+        Write-Host "Conta de Administrador ativada! Ela estará disponível na tela de login." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-FolderPermissions {
+    Write-Host "Restaurando permissões da pasta do seu usuário (Icacls)..." -ForegroundColor Cyan
+    try {
+        $userPath = $env:USERPROFILE
+        icacls "$userPath" /q /c /t /reset | Out-Null
+        Write-Host "Permissões originais restauradas com sucesso para $userPath." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Open-TechMenu {
     do {
         Show-Header
         Write-Host "=== MODO TÉCNICO AVANÇADO (CUIDADO) ===" -ForegroundColor Red
@@ -893,33 +1011,20 @@ function Open-ExtrasMenu {
     } while ($true)
 }
 
-        $opt = Read-Host "Escolha uma opção"
-        switch ($opt) {
-            "1" { Start-Process cleanmgr.exe }
-            "2" { Start-Process "ms-settings:storage" }
-            "3" { Start-Process taskmgr.exe }
-            "4" { Start-Process appwiz.cpl }
-            "5" { Start-Process "windowsdefender:" }
-            "6" { Start-Process SystemPropertiesPerformance.exe }
-            "0" { return }
-            default {
-                Write-Host "Opção inválida." -ForegroundColor Red
-                Pause-MR
-            }
-        }
-    } while ($true)
-}
-
 # ------------------ LOOP PRINCIPAL ------------------
 
-switch ($choice) {
+do {
+    Show-MainMenu
+    $choice = Read-Host "Digite o número da opção desejada"
+
+    switch ($choice) {
         "1" { Open-OptimizeMenu }
         "2" { Open-ActivatorMenu }
         "3" { Open-GamerMenu }
         "4" { Open-SystemToolsMenu }
         "5" { Open-DiagnosticsMenu }
         "6" { Open-ExtrasMenu }
-        "7" { Open-TechMenu } # <- NOVA OPÇÃO AQUI
+        "7" { Open-TechMenu }
         "0" { break }
         default {
             Write-Host "Opção inválida. Digite um número do menu." -ForegroundColor Red
@@ -932,4 +1037,3 @@ Write-Host ""
 Write-Host "Obrigado por usar o Mr Evan Intelligent Repair System!" -ForegroundColor Cyan
 Write-Host "Fechando..." -ForegroundColor DarkGray
 Start-Sleep -Seconds 1
-

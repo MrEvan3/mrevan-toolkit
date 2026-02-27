@@ -1,4 +1,4 @@
-# 🛠️ Mr Evan Intelligent Repair System (v2.2.0)
+# 🛠️ Mr Evan Intelligent Repair System (v2.3.0)
 
 Bem-vindo ao **Mr Evan Intelligent Repair System**, um console interativo e avançado em PowerShell criado para otimizar, reparar e extrair o máximo de desempenho do Windows 10 e 11. 
 
@@ -10,7 +10,9 @@ Desenvolvido por **Evandro Lemos**, este toolkit centraliza dezenas de comandos 
 
 Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o PowerShell como Administrador e copiar e colar o comando no PowerShell:
 
-` ` `irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex` ` `
+` ` `powershell
+irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
+` ` `
 
 **Aviso:** Privilégios de Administrador são estritamente necessários para aplicar edições de registro, modificar serviços e resetar adaptadores de rede de forma eficaz.
 
@@ -29,6 +31,7 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 **Otimização de Rede:** Esvazia o cache DNS (ipconfig /flushdns) e altera o DNS de todos os adaptadores IPv4 ativos para o Cloudflare (1.1.1.1 / 1.0.0.1).
 
 <img width="803" height="423" alt="Captura de tela 2026-02-26 225057" src="https://github.com/user-attachments/assets/7695910d-f5a5-4047-a37e-b02d510e810d" />
+
 ---
 
 ### 🔑 [2] Windows / Office (Ativador)
@@ -37,6 +40,7 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 **Status:** Consulta o Software Licensing Management Tool (slmgr /xpr) para exibir o status de licenciamento atual da máquina.
 
 <img width="795" height="457" alt="Captura de tela 2026-02-26 225142" src="https://github.com/user-attachments/assets/9716f9b8-97a2-4f03-9c09-92fa6707fe42" />
+
 ---
 
 ### 🎮 [3] Ferramentas Gamer (Baixa Latência)
@@ -72,18 +76,21 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 <img width="799" height="477" alt="Captura de tela 2026-02-26 225642" src="https://github.com/user-attachments/assets/ad7814f3-d425-4c51-ada0-176ca5aed16d" />
 
 <img width="805" height="472" alt="Captura de tela 2026-02-26 235934" src="https://github.com/user-attachments/assets/251fea4b-089c-4d6e-bff2-ab9c7d84fdac" />
+
 ---
 
 ### 📊 [5] Diagnóstico do PC
 **Monitoramento:** Traz um relatório rápido do sistema exibindo SO, build, modelo da CPU, GPU, quantidade de RAM, tempo de atividade (uptime), e capacidade/espaço livre de todos os discos físicos.
 
 <img width="808" height="468" alt="Captura de tela 2026-02-27 000005" src="https://github.com/user-attachments/assets/d6db0cff-35ec-4373-8032-59459af1728e" />
+
 ---
 
 ### 🧰 [6] Utilitários Extras
 **Acesso Rápido:** Atalhos para menus vitais que costumam ficar escondidos no Windows: Limpeza de Disco (cleanmgr), Configurações de Armazenamento, Programas e Recursos (appwiz.cpl) e Propriedades de Desempenho Visual.
 
 <img width="794" height="465" alt="Captura de tela 2026-02-26 225728" src="https://github.com/user-attachments/assets/9947d0a9-a58a-4158-af73-c0913da20b5d" />
+
 ---
 
 ### ⚠️ [7] Modo Técnico Avançado (Danger Zone)
@@ -135,7 +142,30 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 
 ---
 
-🏆 Créditos e Ferramentas de Terceiros
+### 🚑 [10] Recuperação Offline (Modo Boot/WinPE)
+**Diagnóstico e Partições:** Lista discos via `diskpart` para localizar a instalação do Windows, detecta o status do BitLocker e lê o log de falhas de inicialização do sistema (`SrtTrail.txt`).
+
+**Reparo de Imagem e Disco:** Executa o SFC Offline para restaurar arquivos do sistema corrompidos e o CHKDSK para corrigir setores defeituosos diretamente no disco inativo.
+
+**Reparo de Inicialização:** Automatiza a reconstrução do boot (MBR/BCD) via `bootrec`, restaura o BCD com `bcdboot` e corrige o apontamento do OS Device no Winload.
+
+**Backup de Emergência:** Usa o poder do `robocopy` para realizar o backup completo dos arquivos dos usuários para um pendrive ou HD externo, pulando erros de leitura e arquivos bloqueados.
+
+**Bypass de Senha:** Substitui temporariamente o `utilman.exe` pelo CMD para permitir a redefinição de senhas locais pela tela de bloqueio, com função automática para reverter a alteração e apagar os rastros.
+
+> #### 📖 Guia Passo a Passo: Quebra de Senha via Pendrive (Bypass Utilman)
+> 1. **Prepare o Pendrive:** Baixe o script `MrEvanToolkit.ps1` e salve-o na raiz de um pendrive de instalação do Windows.
+> 2. **Dê o Boot:** Inicie o PC problemático pelo pendrive. Quando a primeira tela azul de instalação do Windows aparecer, pressione **Shift + F10** para abrir o CMD.
+> 3. **Abra o Script:** No CMD, digite `powershell` e dê Enter. Depois, chame o script digitando o caminho do seu pendrive (ex: `E:\MrEvanToolkit.ps1`) para abrir o painel.
+> 4. **Inicie o Bypass:** No menu principal, escolha a opção **10** *(Recuperação Offline)* e depois a opção **5** *(Desativar Conta Administrador)*.
+> 5. **Identifique o Windows:** O script perguntará a letra onde o Windows está instalado. No modo boot (WinPE), a letra geralmente muda para **D** ou **E**. Use a opção 1 do menu de Recuperação para listar os discos caso tenha dúvida.
+> 6. **Injete o Código:** Pressione **1** para ativar o bypass. O script fará o backup do utilman original e o substituirá pelo CMD. Feche tudo e reinicie o PC normalmente sem o pendrive.
+> 7. **Mude a Senha:** Na tela de bloqueio do Windows (onde pede a senha), clique no botão de **Acessibilidade** (canto inferior direito). Um CMD com privilégios máximos se abrirá. Digite o comando `control userpasswords2` para abrir a interface gráfica ou `net user [nome_do_usuario] *` para redefinir a senha ali mesmo. Feche o CMD e entre no Windows com a nova senha.
+> 8. **Limpe os Rastros (Importante):** Após acessar o Windows com sucesso, volte a dar boot pelo pendrive, abra o script novamente (Opção 10 > Opção 5) e pressione **2** para restaurar o `utilman.exe` original e deixar o sistema seguro como antes.
+
+---
+
+## 🏆 Créditos e Ferramentas de Terceiros
 Este toolkit automatiza muitos processos e também se apoia nos ombros de gigantes do código aberto. O Mr Evan IRS executa integrações com os seguintes projetos de terceiros:
 
 **[Microsoft Activation Scripts (MAS)](https://github.com/massgravel/Microsoft-Activation-Scripts):** Criado por massgravel. Utilizado no menu [2] para ativação legítima via HWID/KMS38 do Windows e Office.
@@ -145,7 +175,6 @@ Este toolkit automatiza muitos processos e também se apoia nos ombros de gigant
 <img width="1518" height="485" alt="Captura de tela 2026-02-26 225944" src="https://github.com/user-attachments/assets/16ce03ed-0af9-43a8-bd56-42f0220ad2da" />
 
 <img width="1419" height="740" alt="Captura de tela 2026-02-26 230044" src="https://github.com/user-attachments/assets/10fdd408-a68a-4ce9-9209-9dbf1de78090" />
-
 
 Todo o restante do código em PowerShell, lógica de menus e rotinas de automação foram escritos e compilados por Evandro Lemos.
 
@@ -158,6 +187,6 @@ Todo o restante do código em PowerShell, lógica de menus e rotinas de automaç
 
 ---
 
-**Licença:** Desenvolvido sob a [MIT License](LICENSE).
+**Licença:** Desenvolvido sob a [Licença MIT e Termos de Uso](LICENSE.md).
 
 Este software é fornecido "como está", sem garantias de qualquer tipo. Use as ferramentas avançadas com cuidado e certifique-se de entender as modificações aplicadas ao sistema.

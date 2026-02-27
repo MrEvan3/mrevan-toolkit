@@ -5,7 +5,7 @@
 #>
 
 $ErrorActionPreference = "Stop"
-$MRIRS_Version         = "v2.2.0"
+$MRIRS_Version         = "v2.3.0"
 $MRIRS_Width           = 100
 
 # ------------------ SUPORTE BÁSICO ------------------
@@ -68,9 +68,13 @@ function Show-Header {
     Write-Host ""
     Write-Separator
     
-    # Mr Evan em destaque (Blocos Unicode)
-    Show-Center "█▀▄▀█ █▀█   █▀▀ █░█ ▄▀█ █▄░█" "Red"
-    Show-Center "█░▀░█ █▀▄   ██▄ ▀▄▀ █▀█ █░▀█" "Red"
+    # Mr Evan em destaque (Blocos Unicode Grandes)
+    Show-Center "███╗   ███╗██████╗     ███████╗██╗   ██╗██████╗ ███╗   ██╗" "Red"
+    Show-Center "████╗ ████║██╔══██╗    ██╔════╝██║   ██║██╔══██╗████╗  ██║" "Red"
+    Show-Center "██╔████╔██║██████╔╝    █████╗  ██║   ██║███████║██╔██╗ ██║" "Red"
+    Show-Center "██║╚██╔╝██║██╔══██╗    ██╔══╝  ╚██╗ ██╔╝██╔══██║██║╚██╗██║" "Red"
+    Show-Center "██║ ╚═╝ ██║██║  ██║    ███████╗ ╚████╔╝ ██║  ██║██║ ╚████║" "Red"
+    Show-Center "╚═╝     ╚═╝╚═╝  ╚═╝    ╚══════╝  ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═══╝" "Red"
     Write-Host ""
     
     Show-Center "Intelligent Repair System" "Red"
@@ -113,8 +117,12 @@ function Show-MainMenu {
     Write-Host " [9] ACESSO REMOTO (ANYDESK)" -ForegroundColor Cyan -NoNewline
     Write-Host " [SUPORTE]" -ForegroundColor Blue -NoNewline
     Write-Host " - Baixa e abre o AnyDesk como Administrador" -ForegroundColor Gray
+    Write-Host " [10] RECUPERACAO OFFLINE  " -ForegroundColor Cyan -NoNewline
+    Write-Host " [BOOT]" -ForegroundColor DarkYellow -NoNewline
+    Write-Host " - Ferramentas para uso em Pendrive (WinPE)" -ForegroundColor Gray
     Write-Host ""
     Write-Host " [0] SAIR                  " -ForegroundColor Red -NoNewline
+    Write-Host " [---]" -ForegroundColor DarkGray -NoNewline
     Write-Host " - Fechar e sair do Mr Evan IRS" -ForegroundColor Gray
     Write-Host ""
 }
@@ -332,7 +340,7 @@ function Run-CHKDSKScan {
 function Create-RestorePoint {
     Write-Host "Criando ponto de restauração (se o recurso estiver ativado)..." -ForegroundColor Cyan
     try {
-        Checkpoint-Computer -Description "Mr Evan IRS" -RestorePointType "MODIFY_SETTINGS"
+        Checkpoint-Computer -Description "Mr Evan IRS" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue
         Write-Host "Ponto de restauração solicitado." -ForegroundColor Green
     } catch {
         Write-Host "Não foi possível criar o ponto de restauração: $($_.Exception.Message)" -ForegroundColor Yellow
@@ -1139,6 +1147,160 @@ function Start-AnyDesk {
     Pause-MR
 }
 
+# ------------------ BLOCO: RECUPERAÇÃO OFFLINE (MODO BOOT/WINPE) ------------------
+
+function Get-OfflineDrive {
+    Write-Host "1. Verificando Partições e Discos (Diskpart)..." -ForegroundColor Cyan
+    Write-Host "Procure a letra de unidade correta do seu Windows:" -ForegroundColor Yellow
+    "echo list volume | diskpart" | cmd
+}
+
+function Run-OfflineSFC {
+    $drv = Read-Host "Digite a letra da unidade onde o Windows está instalado (ex: C, D, E)"
+    if ($drv -match "^[a-zA-Z]$") {
+        Write-Host "2. Iniciando SFC Offline na unidade $drv`: ..." -ForegroundColor Cyan
+        try { sfc /scannow /offbootdir=$drv`:\ /offwindir=$drv`:\Windows } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+    }
+}
+
+function Run-BootrecRepair {
+    Write-Host "3. Reparando setores de inicialização (Bootrec)..." -ForegroundColor Cyan
+    try {
+        bootrec /fixmbr
+        bootrec /fixboot
+        bootrec /rebuildbcd
+        Write-Host "Reparo concluído." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Run-OfflineCHKDSK {
+    $drv = Read-Host "Digite a letra da unidade para verificar erros (ex: C, D)"
+    if ($drv -match "^[a-zA-Z]$") {
+        Write-Host "4. Iniciando CHKDSK /F /R na unidade $drv`: (pode demorar horas)..." -ForegroundColor Cyan
+        try { chkdsk "$drv`:" /f /r } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+    }
+}
+
+function Bypass-AdminPassword {
+    Write-Host "5. Quebrar Senha de Administrador (Bypass Utilman)" -ForegroundColor Red
+    Write-Host "Isso trocará as ferramentas de acessibilidade pelo CMD na tela de bloqueio." -ForegroundColor Yellow
+    $op = Read-Host "Digite [1] para Ativar o Bypass ou [2] para Reverter"
+    $drv = Read-Host "Digite a letra da unidade do Windows (ex: C, D)"
+    
+    if ($drv -match "^[a-zA-Z]$") {
+        $sys32 = "$drv`:\Windows\System32"
+        if ($op -eq "1") {
+            try {
+                Rename-Item "$sys32\utilman.exe" "utilman.exe.bak" -Force -ErrorAction Stop
+                Copy-Item "$sys32\cmd.exe" "$sys32\utilman.exe" -Force -ErrorAction Stop
+                Write-Host "Bypass Ativado! Reinicie o PC, clique no ícone de Acessibilidade na tela de login para abrir o CMD." -ForegroundColor Green
+                Write-Host "No CMD, digite: net user <nome> * (para mudar a senha)." -ForegroundColor Yellow
+            } catch { Write-Host "Erro. Certifique-se que inseriu a letra certa do Windows." -ForegroundColor Red }
+        } elseif ($op -eq "2") {
+            try {
+                Remove-Item "$sys32\utilman.exe" -Force -ErrorAction Stop
+                Rename-Item "$sys32\utilman.exe.bak" "utilman.exe" -Force -ErrorAction Stop
+                Write-Host "Bypass Revertido! Sistema restaurado ao normal." -ForegroundColor Green
+            } catch { Write-Host "Erro ao reverter. Arquivo de backup não encontrado." -ForegroundColor Red }
+        }
+    }
+}
+
+function Backup-UsersOffline {
+    Write-Host "6. Backup Automático de Usuários (Robocopy)" -ForegroundColor Cyan
+    $src = Read-Host "Letra da unidade do Windows do cliente (ex: C, D)"
+    $dst = Read-Host "Letra ou caminho do HD/Pendrive de destino (ex: E:\Backup)"
+    if ($src -and $dst) {
+        Write-Host "Copiando todos os arquivos dos usuários... Aguarde." -ForegroundColor Yellow
+        # Copia ignorando bloqueios e pastas vazias, excelente para backup de HD corrompido
+        robocopy "$src`:\Users" "$dst\Users" /E /ZB /R:1 /W:1 /XD AppData
+        Write-Host "Backup finalizado!" -ForegroundColor Green
+    }
+}
+
+function Check-BitLockerOffline {
+    Write-Host "7. Detectar Status do BitLocker..." -ForegroundColor Cyan
+    $drv = Read-Host "Digite a letra da unidade para checar (ex: C, D)"
+    if ($drv -match "^[a-zA-Z]$") {
+        try { manage-bde -status "$drv`:" } catch { Write-Host "Comando não suportado neste ambiente." -ForegroundColor Red }
+    }
+}
+
+function Restore-BCDRoot {
+    Write-Host "8. Restaurar BCD e Criar Nova Partição de Boot" -ForegroundColor Cyan
+    $drv = Read-Host "Digite a letra da unidade do Windows (ex: C, D)"
+    if ($drv -match "^[a-zA-Z]$") {
+        try {
+            bcdboot "$drv`:\Windows" /l pt-BR
+            Write-Host "Arquivos de inicialização do BCD copiados com sucesso." -ForegroundColor Green
+        } catch { Write-Host "Falha ao restaurar BCD." -ForegroundColor Red }
+    }
+}
+
+function Repair-Winload {
+    Write-Host "9. Reparar Winload (Apontamento de OS Device)" -ForegroundColor Cyan
+    $drv = Read-Host "Digite a letra correta da unidade do Windows (ex: C, D)"
+    if ($drv -match "^[a-zA-Z]$") {
+        try {
+            bcdedit /set "{default}" device partition=$drv`:
+            bcdedit /set "{default}" osdevice partition=$drv`:
+            Write-Host "Apontamento do Winload corrigido no BCD." -ForegroundColor Green
+        } catch { Write-Host "Erro ao modificar o BCD." -ForegroundColor Red }
+    }
+}
+
+function Diagnose-BootFailure {
+    Write-Host "10. Diagnóstico de Falha de Inicialização (SrtTrail.txt)" -ForegroundColor Cyan
+    $drv = Read-Host "Digite a letra da unidade do Windows (ex: C, D)"
+    if ($drv -match "^[a-zA-Z]$") {
+        $log = "$drv`:\Windows\System32\LogFiles\Srt\SrtTrail.txt"
+        if (Test-Path $log) {
+            Write-Host "Últimas linhas do log oficial de diagnóstico do Windows:" -ForegroundColor Yellow
+            Get-Content $log -Tail 20
+        } else {
+            Write-Host "Arquivo SrtTrail.txt não encontrado. O Windows pode não ter gerado log de reparo automático." -ForegroundColor Red
+        }
+    }
+}
+
+function Open-RecoveryMenu {
+    do {
+        Show-Header
+        Write-Host "=== MODO RECUPERAÇÃO OFFLINE (BOOT / WINPE) ===" -ForegroundColor DarkYellow
+        Write-Host "NOTA: Ferramentas projetadas para rodar do Pendrive (Shift+F10)" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host " [1] Verificar partições e discos (Diskpart list volume)" -ForegroundColor Cyan
+        Write-Host " [2] Verificar integridade do sistema (SFC /offbootdir)" -ForegroundColor Cyan
+        Write-Host " [3] Reparar Boot (Bootrec /fixmbr, /fixboot, /rebuildbcd)" -ForegroundColor Cyan
+        Write-Host " [4] Verificar erros físicos e lógicos no disco (CHKDSK)" -ForegroundColor Cyan
+        Write-Host " [5] Desativar Conta Administrador (Bypass utilman.exe)" -ForegroundColor Red
+        Write-Host " [6] Backup Automático de Usuários (Robocopy offline)" -ForegroundColor Cyan
+        Write-Host " [7] Detectar Criptografia BitLocker" -ForegroundColor Cyan
+        Write-Host " [8] Restaurar BCD (Bcdboot)" -ForegroundColor Cyan
+        Write-Host " [9] Reparar apontamento do Winload" -ForegroundColor Cyan
+        Write-Host " [10] Diagnóstico de falha de inicialização (Ler SrtTrail.txt)" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host " [0] Voltar ao menu principal" -ForegroundColor DarkYellow
+        Write-Host ""
+
+        $opt = Read-Host "Escolha uma opção"
+        switch ($opt) {
+            "1" { Get-OfflineDrive; Pause-MR }
+            "2" { Run-OfflineSFC; Pause-MR }
+            "3" { Run-BootrecRepair; Pause-MR }
+            "4" { Run-OfflineCHKDSK; Pause-MR }
+            "5" { Bypass-AdminPassword; Pause-MR }
+            "6" { Backup-UsersOffline; Pause-MR }
+            "7" { Check-BitLockerOffline; Pause-MR }
+            "8" { Restore-BCDRoot; Pause-MR }
+            "9" { Repair-Winload; Pause-MR }
+            "10" { Diagnose-BootFailure; Pause-MR }
+            "0" { return }
+            default { Write-Host "Opção inválida." -ForegroundColor Red; Pause-MR }
+        }
+    } while ($true)
+}
+
 # ------------------ LOOP PRINCIPAL ------------------
 
 do {
@@ -1154,7 +1316,8 @@ do {
         "6" { Open-ExtrasMenu }
         "7" { Open-TechMenu }
         "8" { Open-RestoreMenu }
-        "9" { Start-AnyDesk } # <- NOSSA NOVA OPÇÃO AQUI
+        "9" { Start-AnyDesk }
+        "10" { Open-RecoveryMenu }
         "0" { break }
         default {
             Write-Host "Opção inválida. Digite um número do menu." -ForegroundColor Red

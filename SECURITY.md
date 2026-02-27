@@ -22,4 +22,9 @@ We will do our best to respond and, if applicable, release a fix. Thank you for 
 
 ## Scope
 
-This project is a PowerShell script for local system maintenance. It does not collect or transmit your data to external servers, except when you explicitly choose options that call external services (e.g. WinUtil, MAS). Use the script only in environments you trust and with appropriate administrator privileges.
+This project is a PowerShell script for local system maintenance and offline recovery. It does not collect or transmit your data to external servers, except when you explicitly choose options that call external services or download third-party tools (e.g., WinUtil, MAS, AnyDesk). 
+
+**Warning regarding Advanced and Recovery Modes:**
+Certain features in the Advanced Technical Mode and Offline Recovery Mode (WinPE) perform deep system modifications. This includes altering boot records (MBR/BCD), changing network stacks, and modifying authentication binaries (such as the `utilman.exe` bypass for administrative access). 
+
+Use this script **only** in environments you trust, on computers you own or have explicit authorization to repair, and with the appropriate administrator privileges.

@@ -5,7 +5,7 @@
 #>
 
 $ErrorActionPreference = "Stop"
-$MRIRS_Version         = "v2.3.0"
+$MRIRS_Version         = "v1.0"
 $MRIRS_Width           = 100
 
 # ------------------ SUPORTE BÁSICO ------------------
@@ -81,7 +81,7 @@ function Show-Header {
     Show-Center "Created by Evandro Lemos" "DarkGray"
     Write-Host ""
     
-    Show-Center "Versao $MRIRS_Version  |  Windows 10/11" "Gray"
+    Show-Center "Versao $MRIRS_Version 2026.02.27 |  Windows 10/11" "Gray"
     Write-Separator
     Show-Center "Use os numeros para navegar. 0 sempre volta/sai." "Gray"
     Write-Separator

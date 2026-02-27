@@ -10,11 +10,12 @@ Desenvolvido por **Evandro Lemos**, este toolkit centraliza dezenas de comandos 
 
 Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o PowerShell como Administrador e copiar e colar o comando no PowerShell:
 
-` ` `powershell
-irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
+` ` `irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
 ` ` `
 
 **Aviso:** Privilégios de Administrador são estritamente necessários para aplicar edições de registro, modificar serviços e resetar adaptadores de rede de forma eficaz.
+
+<img width="800" height="583" alt="Captura de tela 2026-02-27 023048" src="https://github.com/user-attachments/assets/0522a64f-75f3-47c5-aa2f-8ef70980d13c" />
 
 ---
 
@@ -133,12 +134,17 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 
 **Plano de Energia:** Devolve o sistema ao plano "Equilibrado" (Balanced), focado em economizar bateria e reduzir o uso do hardware.
 
+
+<img width="803" height="597" alt="Captura de tela 2026-02-27 022948" src="https://github.com/user-attachments/assets/2a683846-97a9-411a-9c3c-09f1bd81830a" />
+
 ---
 
 ### 🌐 [9] Acesso Remoto (AnyDesk)
 **Suporte Imediato:** Descarrega a versão mais recente do AnyDesk diretamente dos servidores oficiais e guarda o ficheiro no Ambiente de Trabalho.
 
 **Privilégios Máximos:** O utilitário é iniciado automaticamente com permissões de Administrador, garantindo que o técnico remoto possa interagir com ecrãs de segurança (UAC) e realizar reparações profundas sem perder a conexão.
+
+<img width="815" height="637" alt="Captura de tela 2026-02-27 022643" src="https://github.com/user-attachments/assets/861a651b-ca65-4452-aa81-7029d4e3c868" />
 
 ---
 
@@ -152,6 +158,9 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 **Backup de Emergência:** Usa o poder do `robocopy` para realizar o backup completo dos arquivos dos usuários para um pendrive ou HD externo, pulando erros de leitura e arquivos bloqueados.
 
 **Bypass de Senha:** Substitui temporariamente o `utilman.exe` pelo CMD para permitir a redefinição de senhas locais pela tela de bloqueio, com função automática para reverter a alteração e apagar os rastros.
+
+<img width="807" height="598" alt="Captura de tela 2026-02-27 022835" src="https://github.com/user-attachments/assets/f08843d7-d0c7-42b3-8ae0-359a49132466" />
+
 
 > #### 📖 Guia Passo a Passo: Quebra de Senha via Pendrive (Bypass Utilman)
 > 1. **Prepare o Pendrive:** Baixe o script `MrEvanToolkit.ps1` e salve-o na raiz de um pendrive de instalação do Windows.

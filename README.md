@@ -189,7 +189,7 @@ Todo o restante do código em PowerShell, lógica de menus e rotinas de automaç
 
 ---
 
-📜 Histórico de Evolução
+## 📜 Histórico de Evolução
 🚀 v1.0 - Lançamento Oficial (Consolidação Completa)
 A versão 1.0 marca a transição de um script avançado de otimização para um ecossistema completo de suporte técnico, estruturado com 10 módulos distintos e documentação rigorosa de segurança. Principais novidades consolidadas neste lançamento:
 

@@ -8,12 +8,13 @@ Bem-vindo ao **Mr Evan Intelligent Repair System**, um console interativo e avan
 🚀 Como executar
 
 Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o PowerShell como Administrador e colar o comando abaixo:
----
+ 
+ ---
  irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
+ 
  ---
 
  <img width="795" height="451" alt="Captura de tela 2026-02-26 224929" src="https://github.com/user-attachments/assets/dbfd55bc-b84d-4dca-acaf-a1e5909b3ee3" />
-
 
 ---
 

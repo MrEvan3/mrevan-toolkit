@@ -8,8 +8,9 @@ Bem-vindo ao **Mr Evan Intelligent Repair System**, um console interativo e avan
 🚀 Como executar
 
 Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o PowerShell como Administrador e colar o comando abaixo:
-
+---
  irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
+ ---
 
  <img width="795" height="451" alt="Captura de tela 2026-02-26 224929" src="https://github.com/user-attachments/assets/dbfd55bc-b84d-4dca-acaf-a1e5909b3ee3" />
 
@@ -91,6 +92,8 @@ Atalhos Ocultos: Oferece acesso direto para as ferramentas nativas de diagnósti
 🧰 [6] Utilitários Extras
 Acesso Rápido: Atalhos para menus vitais que costumam ficar escondidos no Windows: Limpeza de Disco (cleanmgr), Configurações de Armazenamento, Programas e Recursos (appwiz.cpl) e Propriedades de Desempenho Visual.
 
+<img width="794" height="465" alt="Captura de tela 2026-02-26 225728" src="https://github.com/user-attachments/assets/9947d0a9-a58a-4158-af73-c0913da20b5d" />
+
 ---
 
 
@@ -109,7 +112,7 @@ Modo Pânico: Reseta o Firewall do Windows aos padrões de fábrica e desbloquei
 
 Boot Seguro: Configura o bcdedit para forçar a máquina a reiniciar diretamente no Modo de Segurança com Rede.
 
-<img width="794" height="465" alt="Captura de tela 2026-02-26 225728" src="https://github.com/user-attachments/assets/650368d7-1f20-41dd-b89e-6c34c97ca393" />
+<img width="797" height="463" alt="Captura de tela 2026-02-26 230853" src="https://github.com/user-attachments/assets/b4230aee-fdaf-47bb-83d5-f961ecd7861f" />
 
 ---
 

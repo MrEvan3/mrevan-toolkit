@@ -111,8 +111,11 @@ function Show-MainMenu {
     Write-Host " [UNDO]" -ForegroundColor Green -NoNewline
     Write-Host " - Desfaz alteracoes e repara problemas" -ForegroundColor Gray
     Write-Host ""
+    Write-Host " [9] ACESSO REMOTO (ANYDESK)" -ForegroundColor Cyan -NoNewline
+    Write-Host " [SUPORTE]" -ForegroundColor Blue -NoNewline
+    Write-Host " - Baixa e abre o AnyDesk como Administrador" -ForegroundColor Gray
+    Write-Host ""
     Write-Host " [0] SAIR                  " -ForegroundColor Red -NoNewline
-    Write-Host " [---]" -ForegroundColor DarkGray -NoNewline
     Write-Host " - Fechar e sair do Mr Evan IRS" -ForegroundColor Gray
     Write-Host ""
 }
@@ -1107,6 +1110,36 @@ function Open-RestoreMenu {
     } while ($true)
 }
 
+# ------------------ BLOCO: SUPORTE REMOTO ------------------
+
+function Start-AnyDesk {
+    Show-Header
+    Write-Host "=== ACESSO REMOTO (ANYDESK) ===" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Baixando a versão mais recente do AnyDesk... Aguarde." -ForegroundColor Yellow
+    
+    $url = "https://download.anydesk.com/AnyDesk.exe"
+    $dest = "$env:USERPROFILE\Desktop\AnyDesk.exe"
+    
+    try {
+        # Faz o download direto do servidor oficial
+        Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+        Write-Host "Download concluído! O arquivo foi salvo na Área de Trabalho." -ForegroundColor Green
+        
+        Write-Host "Iniciando o AnyDesk com privilégios de Administrador..." -ForegroundColor Green
+        # Executa o programa
+        Start-Process -FilePath $dest
+        
+        Write-Host ""
+        Write-Host "O AnyDesk está aberto." -ForegroundColor Cyan
+        Write-Host "Informe o código (Endereço AnyDesk) para o técnico conectar." -ForegroundColor White
+    } catch {
+        Write-Host "Erro ao tentar baixar o AnyDesk: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Verifique sua conexão com a internet ou o firewall." -ForegroundColor DarkGray
+    }
+    Pause-MR
+}
+
 # ------------------ LOOP PRINCIPAL ------------------
 
 do {
@@ -1122,6 +1155,7 @@ do {
         "6" { Open-ExtrasMenu }
         "7" { Open-TechMenu }
         "8" { Open-RestoreMenu }
+        "9" { Start-AnyDesk } # <- NOSSA NOVA OPÇÃO AQUI
         "0" { break }
         default {
             Write-Host "Opção inválida. Digite um número do menu." -ForegroundColor Red

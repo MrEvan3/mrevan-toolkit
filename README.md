@@ -130,6 +130,7 @@ Este toolkit automatiza muitos processos e também se apoia nos ombros de gigant
 <img width="1419" height="740" alt="Captura de tela 2026-02-26 230044" src="https://github.com/user-attachments/assets/10fdd408-a68a-4ce9-9209-9dbf1de78090" />
 
 
+---
 (Todo o restante do código em PowerShell, lógica de menus e rotinas de automação foram escritos e compilados por Evandro Lemos).
 
 ---

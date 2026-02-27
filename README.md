@@ -11,6 +11,9 @@ Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir 
 
  irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
 
+ <img width="795" height="451" alt="Captura de tela 2026-02-26 224929" src="https://github.com/user-attachments/assets/dbfd55bc-b84d-4dca-acaf-a1e5909b3ee3" />
+
+
 ---
 
 Aviso: Privilégios de Administrador são estritamente necessários para aplicar edições de registro, modificar serviços e resetar adaptadores de rede de forma eficaz.
@@ -29,12 +32,16 @@ Otimização de Imagem: Executa o comando DISM /StartComponentCleanup para reduz
 
 Otimização de Rede: Esvazia o cache DNS (ipconfig /flushdns) e altera o DNS de todos os adaptadores IPv4 ativos para o Cloudflare (1.1.1.1 / 1.0.0.1).
 
+<img width="803" height="423" alt="Captura de tela 2026-02-26 225057" src="https://github.com/user-attachments/assets/7695910d-f5a5-4047-a37e-b02d510e810d" />
+
 ---
 
 🔑 [2] Windows / Office (Ativador)
 Ativação MAS: Executa o script oficial do repositório Microsoft Activation Scripts para ativar permanentemente o Windows e produtos Office suportados.
 
 Status: Consulta o Software Licensing Management Tool (slmgr /xpr) para exibir o status de licenciamento atual da máquina.
+
+<img width="795" height="457" alt="Captura de tela 2026-02-26 225142" src="https://github.com/user-attachments/assets/9716f9b8-97a2-4f03-9c09-92fa6707fe42" />
 
 ---
 
@@ -55,6 +62,8 @@ Plano de Energia: Força o plano de Alto Desempenho do Windows (SCHEME_MIN) para
 Game Bar/DVR: Desativa completamente as gravações em segundo plano do Xbox Game Bar via Políticas de Grupo (GPO).
 
 ---
+<img width="794" height="479" alt="Captura de tela 2026-02-26 225220" src="https://github.com/user-attachments/assets/c7ec48f5-f0e0-4d6e-a16f-be27d50d25de" />
+---
 
 ⚙️ [4] Ferramentas do Sistema (Reparos Essenciais)
 WinUtil (Chris Titus): Abre a aclamada ferramenta gráfica externa para tweaks do Windows.
@@ -69,11 +78,12 @@ Telemetria: Interrompe e desativa o serviço DiagTrack, impedindo a coleta de da
 
 ---
 
-
 📊 [5] Diagnóstico do PC
 Monitoramento: Traz um relatório rápido do sistema exibindo SO, build, modelo da CPU, GPU, quantidade de RAM, tempo de atividade (uptime), e capacidade/espaço livre de todos os discos físicos.
 
 Atalhos Ocultos: Oferece acesso direto para as ferramentas nativas de diagnóstico da Microsoft (msinfo32, resmon, dxdiag).
+
+<img width="799" height="477" alt="Captura de tela 2026-02-26 225642" src="https://github.com/user-attachments/assets/ad7814f3-d425-4c51-ada0-176ca5aed16d" />
 
 ---
 
@@ -99,6 +109,8 @@ Modo Pânico: Reseta o Firewall do Windows aos padrões de fábrica e desbloquei
 
 Boot Seguro: Configura o bcdedit para forçar a máquina a reiniciar diretamente no Modo de Segurança com Rede.
 
+<img width="794" height="465" alt="Captura de tela 2026-02-26 225728" src="https://github.com/user-attachments/assets/650368d7-1f20-41dd-b89e-6c34c97ca393" />
+
 ---
 
 
@@ -108,6 +120,11 @@ Este toolkit automatiza muitos processos e também se apoia nos ombros de gigant
 : Criado por massgravel. Utilizado no menu [2] para ativação legítima via HWID/KMS38 do Windows e Office.
 
 : Criado por Chris Titus Tech. Invocado no menu [4] como uma alternativa gráfica e complementar.
+
+<img width="1518" height="485" alt="Captura de tela 2026-02-26 225944" src="https://github.com/user-attachments/assets/16ce03ed-0af9-43a8-bd56-42f0220ad2da" />
+
+<img width="1419" height="740" alt="Captura de tela 2026-02-26 230044" src="https://github.com/user-attachments/assets/10fdd408-a68a-4ce9-9209-9dbf1de78090" />
+
 
 (Todo o restante do código em PowerShell, lógica de menus e rotinas de automação foram escritos e compilados por Evandro Lemos).
 

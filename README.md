@@ -1,4 +1,4 @@
-# 🛠️ Mr Evan Intelligent Repair System (v2.3.0)
+# 🛠️ Mr Evan Intelligent Repair System (v1.0)
 
 Bem-vindo ao **Mr Evan Intelligent Repair System**, um console interativo e avançado em PowerShell criado para otimizar, reparar e extrair o máximo de desempenho do Windows 10 e 11. 
 

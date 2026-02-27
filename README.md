@@ -15,7 +15,7 @@ Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir 
 
 **Aviso:** Privilégios de Administrador são estritamente necessários para aplicar edições de registro, modificar serviços e resetar adaptadores de rede de forma eficaz.
 
-<img width="800" height="583" alt="Captura de tela 2026-02-27 023048" src="https://github.com/user-attachments/assets/0522a64f-75f3-47c5-aa2f-8ef70980d13c" />
+<img width="801" height="569" alt="Captura de tela 2026-02-27 023725" src="https://github.com/user-attachments/assets/683db33f-a847-4f03-a8fd-815c3f337a35" />
 
 ---
 

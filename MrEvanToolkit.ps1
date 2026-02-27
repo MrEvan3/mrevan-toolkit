@@ -110,7 +110,6 @@ function Show-MainMenu {
     Write-Host " [8] RESTAURAR PADROES     " -ForegroundColor Cyan -NoNewline
     Write-Host " [UNDO]" -ForegroundColor Green -NoNewline
     Write-Host " - Desfaz alteracoes e repara problemas" -ForegroundColor Gray
-    Write-Host ""
     Write-Host " [9] ACESSO REMOTO (ANYDESK)" -ForegroundColor Cyan -NoNewline
     Write-Host " [SUPORTE]" -ForegroundColor Blue -NoNewline
     Write-Host " - Baixa e abre o AnyDesk como Administrador" -ForegroundColor Gray

@@ -10,7 +10,7 @@ Desenvolvido por **Evandro Lemos**, este toolkit centraliza dezenas de comandos 
 
 Você não precisa baixar nenhum arquivo manualmente para começar. Basta abrir o PowerShell como Administrador e copiar e colar o comando no PowerShell:
 
-` ` `
+` ` `powershell
 irm "https://raw.githubusercontent.com/MrEvan3/mrevan-toolkit/main/MrEvanToolkit.ps1" | iex
 ` ` `
 

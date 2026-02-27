@@ -5,7 +5,7 @@
 #>
 
 $ErrorActionPreference = "Stop"
-$MRIRS_Version         = "v2.1.0"
+$MRIRS_Version         = "v2.2.0"
 $MRIRS_Width           = 100
 
 # ------------------ SUPORTE BÁSICO ------------------
@@ -107,6 +107,9 @@ function Show-MainMenu {
     Write-Host " [7] MODO TECNICO AVANCADO " -ForegroundColor Cyan -NoNewline
     Write-Host " [DANGER]" -ForegroundColor Red -NoNewline
     Write-Host " - Reparos profundos, debloat e reset de rede" -ForegroundColor Gray
+    Write-Host " [8] RESTAURAR PADROES     " -ForegroundColor Cyan -NoNewline
+    Write-Host " [UNDO]" -ForegroundColor Green -NoNewline
+    Write-Host " - Desfaz alteracoes e repara problemas" -ForegroundColor Gray
     Write-Host ""
     Write-Host " [0] SAIR                  " -ForegroundColor Red -NoNewline
     Write-Host " [---]" -ForegroundColor DarkGray -NoNewline
@@ -331,48 +334,6 @@ function Create-RestorePoint {
         Write-Host "Ponto de restauração solicitado." -ForegroundColor Green
     } catch {
         Write-Host "Não foi possível criar o ponto de restauração: $($_.Exception.Message)" -ForegroundColor Yellow
-    }
-}
-
-# ------------------ BLOCO: DEFENDER / SEGURANÇA ------------------
-
-function Run-DefenderQuickScan {
-    Write-Host "Iniciando verificação rápida do Microsoft Defender..." -ForegroundColor Cyan
-    $cmd = Get-Command -Name Start-MpScan -ErrorAction SilentlyContinue
-    if ($cmd) {
-        try { Start-MpScan -ScanType QuickScan } catch { Write-Host "Erro ao usar Start-MpScan: $($_.Exception.Message)" -ForegroundColor Red }
-    } else {
-        $mpPaths = @(
-            "$env:ProgramFiles\Windows Defender\MpCmdRun.exe",
-            "$env:ProgramFiles\Windows Defender\Platform\*\MpCmdRun.exe"
-        )
-        $mp = Get-ChildItem -Path $mpPaths -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if ($mp) {
-            Start-Process -FilePath $mp.FullName -ArgumentList "-Scan -ScanType 1" -Wait
-        } else {
-            Write-Host "Microsoft Defender não encontrado ou desativado." -ForegroundColor Yellow
-        }
-    }
-}
-
-function Run-DefenderFullScan {
-    Write-Host "Iniciando verificação completa do Microsoft Defender..." -ForegroundColor Cyan
-    $cmd = Get-Command -Name Start-MpScan -ErrorAction SilentlyContinue
-    if ($cmd) {
-        try { Start-MpScan -ScanType FullScan } catch { Write-Host "Erro ao usar Start-MpScan: $($_.Exception.Message)" -ForegroundColor Red }
-    } else {
-        $mpPaths = @(
-            "$env:ProgramFiles\Windows Defender\MpCmdRun.exe",
-            "$env:ProgramFiles\Windows Defender\Platform\*\MpCmdRun.exe"
-        )
-        $mp = Get-ChildItem -Path $mpPaths -ErrorAction SilentlyContinue |
-            Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if ($mp) {
-            Start-Process -FilePath $mp.FullName -ArgumentList "-Scan -ScanType 2" -Wait
-        } else {
-            Write-Host "Microsoft Defender não encontrado ou desativado." -ForegroundColor Yellow
-        }
     }
 }
 
@@ -1011,6 +972,141 @@ function Open-TechMenu {
     } while ($true)
 }
 
+# ------------------ BLOCO: RESTAURAR PADRÕES (UNDO) ------------------
+
+function Reset-WindowsDefender {
+    Write-Host "Resetando Segurança do Windows para o padrão..." -ForegroundColor Cyan
+    try {
+        & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RestoreDefaults
+        Write-Host "Padrões do Defender restaurados." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Restart-Explorer {
+    Write-Host "Reiniciando Windows Explorer e limpando cache de ícones..." -ForegroundColor Cyan
+    try {
+        Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
+        Remove-Item "$env:LOCALAPPDATA\IconCache.db" -Force -ErrorAction SilentlyContinue
+        Start-Process explorer.exe
+        Write-Host "Explorer reiniciado com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-WindowsStore {
+    Write-Host "Resetando Microsoft Store (wsreset)..." -ForegroundColor Cyan
+    try {
+        Start-Process wsreset.exe -Wait
+        Write-Host "Store resetada com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Fix-StartMenu {
+    Write-Host "Consertando Menu Iniciar (Re-registrando pacotes)... Isso pode demorar vários minutos." -ForegroundColor Yellow
+    try {
+        Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml" -ErrorAction SilentlyContinue}
+        Write-Host "Menu Iniciar e pacotes consertados." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Undo-ClassicContextMenu {
+    Write-Host "Revertendo Menu de Contexto para o padrão moderno do Win 11..." -ForegroundColor Cyan
+    try {
+        Remove-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}" -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "Menu revertido. Reinicie o Windows Explorer para aplicar." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-HostsFile {
+    Write-Host "Restaurando arquivo HOSTS para o padrão de fábrica da Microsoft..." -ForegroundColor Cyan
+    try {
+        $hostsPath = "$env:WINDIR\System32\drivers\etc\hosts"
+        $defaultHosts = @"
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# 127.0.0.1       localhost
+# ::1             localhost
+"@
+        Set-Content -Path $hostsPath -Value $defaultHosts -Force
+        Write-Host "Arquivo HOSTS restaurado com sucesso." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Reset-DNSToDHCP {
+    Write-Host "Restaurando DNS Automático (DHCP)..." -ForegroundColor Cyan
+    try {
+        $adapters = Get-NetAdapter | Where-Object Status -eq Up
+        foreach ($ad in $adapters) {
+            Set-DnsClientServerAddress -InterfaceIndex $ad.InterfaceIndex -ResetServerAddresses -ErrorAction SilentlyContinue
+        }
+        ipconfig /flushdns | Out-Null
+        Write-Host "DNS configurado para buscar IP e DNS automaticamente (DHCP)." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Enable-WebSearch {
+    Write-Host "Reativando pesquisa Web no Menu Iniciar..." -ForegroundColor Cyan
+    try {
+        $path = "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer"
+        Remove-ItemProperty -Path $path -Name "DisableSearchBoxSuggestions" -Force -ErrorAction SilentlyContinue
+        Write-Host "Pesquisa Web reativada. Reinicie o Windows Explorer para aplicar." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Repair-Office {
+    Write-Host "Iniciando processo seguro de reparo do Microsoft 365 / Office..." -ForegroundColor Cyan
+    Write-Host "Isso abrirá o painel de Programas. Localize o Microsoft 365, clique em 'Alterar' e depois 'Reparo Online'." -ForegroundColor Yellow
+    try {
+        Start-Process appwiz.cpl
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Restore-BalancedPowerPlan {
+    Write-Host "Restaurando Plano de Energia Equilibrado (Padrão)..." -ForegroundColor Cyan
+    try {
+        powercfg -setactive SCHEME_BALANCED | Out-Null
+        Write-Host "Plano Equilibrado ativado. Ideal para economizar bateria." -ForegroundColor Green
+    } catch { Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor Red }
+}
+
+function Open-RestoreMenu {
+    do {
+        Show-Header
+        Write-Host "=== RESTAURAR PADRÕES (DESFAZER) ===" -ForegroundColor Green
+        Write-Host ""
+        Write-Host " [1] Resetar Segurança do Windows (Defender)" -ForegroundColor Cyan
+        Write-Host " [2] Destravar Explorer e Barra de Tarefas" -ForegroundColor Cyan
+        Write-Host " [3] Resetar Microsoft Store e Cache" -ForegroundColor Cyan
+        Write-Host " [4] Consertar Menu Iniciar Quebrado (Re-registrar AppX)" -ForegroundColor Cyan
+        Write-Host " [5] Reverter Menu de Contexto (Padrão Win 11)" -ForegroundColor Cyan
+        Write-Host " [6] Redefinir Arquivo HOSTS (Padrão Microsoft)" -ForegroundColor Cyan
+        Write-Host " [7] Restaurar DNS Automático (DHCP)" -ForegroundColor Cyan
+        Write-Host " [8] Reativar a Pesquisa Web no Iniciar" -ForegroundColor Cyan
+        Write-Host " [9] Reparo Oficial do Microsoft 365 / Office" -ForegroundColor Cyan
+        Write-Host " [10] Restaurar Plano de Energia Equilibrado" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host " [0] Voltar ao menu principal" -ForegroundColor DarkYellow
+        Write-Host ""
+
+        $opt = Read-Host "Escolha uma opção"
+        switch ($opt) {
+            "1" { Reset-WindowsDefender; Pause-MR }
+            "2" { Restart-Explorer; Pause-MR }
+            "3" { Reset-WindowsStore; Pause-MR }
+            "4" { Fix-StartMenu; Pause-MR }
+            "5" { Undo-ClassicContextMenu; Pause-MR }
+            "6" { Reset-HostsFile; Pause-MR }
+            "7" { Reset-DNSToDHCP; Pause-MR }
+            "8" { Enable-WebSearch; Pause-MR }
+            "9" { Repair-Office; Pause-MR }
+            "10" { Restore-BalancedPowerPlan; Pause-MR }
+            "0" { return }
+            default { Write-Host "Opção inválida." -ForegroundColor Red; Pause-MR }
+        }
+    } while ($true)
+}
+
 # ------------------ LOOP PRINCIPAL ------------------
 
 do {
@@ -1025,6 +1121,7 @@ do {
         "5" { Open-DiagnosticsMenu }
         "6" { Open-ExtrasMenu }
         "7" { Open-TechMenu }
+        "8" { Open-RestoreMenu }
         "0" { break }
         default {
             Write-Host "Opção inválida. Digite um número do menu." -ForegroundColor Red

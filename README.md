@@ -185,7 +185,23 @@ Este toolkit automatiza muitos processos e também se apoia nos ombros de gigant
 
 <img width="1419" height="740" alt="Captura de tela 2026-02-26 230044" src="https://github.com/user-attachments/assets/10fdd408-a68a-4ce9-9209-9dbf1de78090" />
 
-Todo o restante do código em PowerShell, lógica de menus e rotinas de automação foram escritos e compilados por Evandro Lemos.
+Todo o restante do código em PowerShell, lógica de menus e rotinas de automação foram escritos e compilados por **Evandro Lemos**.
+
+---
+
+📜 Histórico de Evolução
+🚀 v1.0 - Lançamento Oficial (Consolidação Completa)
+A versão 1.0 marca a transição de um script avançado de otimização para um ecossistema completo de suporte técnico, estruturado com 10 módulos distintos e documentação rigorosa de segurança. Principais novidades consolidadas neste lançamento:
+
+Nova Interface Gráfica: Criação de um cabeçalho proeminente e legível em blocos Unicode gigantes (ANSI Shadow).
+
+Módulo de Restauração (Menu 8): Adicionado arsenal para reverter configurações de fábrica, consertar a Microsoft Store, re-registrar aplicativos do Menu Iniciar corrompidos e restaurar o Defender.
+
+Módulo de Suporte Remoto (Menu 9): Implementação de download automático e execução instantânea do AnyDesk com privilégios de administrador herdados, evitando bloqueios de UAC durante o suporte.
+
+Módulo WinPE / Recuperação Offline (Menu 10): Criação de uma suíte vitalícia para uso via Pendrive Bootável, contendo ferramentas como SFC/DISM offline, reparos lógicos de disco, reparos do setor de boot (MBR/BCD), backup em massa à prova de falhas com o Robocopy e uma rotina de bypass automatizado (utilman.exe) para quebra emergencial de senha local.
+
+Segurança e Ética: Integração completa de políticas SECURITY.md, CODE_OF_CONDUCT.md e adequação aos princípios de proteção de dados e LGPD no repousitório e script.
 
 ---
 

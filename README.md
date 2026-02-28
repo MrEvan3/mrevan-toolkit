@@ -43,7 +43,7 @@ Este repositório contém:
   
 <img width="1433" height="478" alt="Captura de tela 2026-02-28 192529" src="https://github.com/user-attachments/assets/bef6b917-14ef-4c05-b98c-9ae841434510" />
 
-<img width="1433" height="478" alt="Captura de tela 2026-02-28 192529" src="https://github.com/user-attachments/assets/c57f5834-643b-4230-8a91-5ec1685220e2" />
+<img width="778" height="550" alt="Captura de tela 2026-02-28 194226" src="https://github.com/user-attachments/assets/8f022beb-33a4-4bfb-ad4a-74a3c63cef3c" />
 
 <img width="853" height="490" alt="Captura de tela 2026-02-28 193805" src="https://github.com/user-attachments/assets/3596921c-f77b-4be8-9d5d-5570ed28a3a1" />
 

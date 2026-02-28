@@ -40,6 +40,8 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 
 **Status:** Consulta o Software Licensing Management Tool (slmgr /xpr) para exibir o status de licenciamento atual da máquina.
 
+**Bypass Windows 11 (TPM/CPU):** Injeta chaves de registro oficiais para ignorar os requisitos de hardware do Windows 11, permitindo atualizações em PCs antigos e abrindo a página de download oficial automaticamente.
+
 <img width="795" height="457" alt="Captura de tela 2026-02-26 225142" src="https://github.com/user-attachments/assets/9716f9b8-97a2-4f03-9c09-92fa6707fe42" />
 
 ---
@@ -83,6 +85,8 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 ### 📊 [5] Diagnóstico do PC
 **Monitoramento:** Traz um relatório rápido do sistema exibindo SO, build, modelo da CPU, GPU, quantidade de RAM, tempo de atividade (uptime), e capacidade/espaço livre de todos os discos físicos.
 
+**Exportar Laudo Técnico:** Gera um arquivo Laudo_Hardware_MrEvan.txt na Área de Trabalho contendo todas as especificações detalhadas e a saúde do armazenamento. Ideal para enviar a clientes como prova de configuração e diagnóstico de falhas.
+
 <img width="808" height="468" alt="Captura de tela 2026-02-27 000005" src="https://github.com/user-attachments/assets/d6db0cff-35ec-4373-8032-59459af1728e" />
 
 ---
@@ -90,11 +94,17 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 ### 🧰 [6] Utilitários Extras
 **Acesso Rápido:** Atalhos para menus vitais que costumam ficar escondidos no Windows: Limpeza de Disco (cleanmgr), Configurações de Armazenamento, Programas e Recursos (appwiz.cpl) e Propriedades de Desempenho Visual.
 
+**Exportar Laudo Técnico:** Gera um arquivo Laudo_Hardware_MrEvan.txt na Área de Trabalho contendo todas as especificações detalhadas e a saúde do armazenamento. Ideal para enviar a clientes como prova de configuração e diagnóstico de falhas.
+
+**Backup Inteligente de Drivers:** Varre o sistema e exporta rapidamente todos os drivers de terceiros (áudio, rede, vídeo) para uma pasta de backup, funcionando como um salva-vidas preventivo antes de formatar a máquina.
+
 <img width="794" height="465" alt="Captura de tela 2026-02-26 225728" src="https://github.com/user-attachments/assets/9947d0a9-a58a-4158-af73-c0913da20b5d" />
 
 ---
 
 ### ⚠️ [7] Modo Técnico Avançado (Danger Zone)
+**Protocolo de Desinfecção Nuclear:** Um sistema letal de 8 fases para remoção de vírus. Mata processos maliciosos isolados, limpa adwares de navegadores, baixa e roda o Microsoft Safety Scanner (MSERT) silenciosamente, repara as rotas de rede, roda o SFC para curar danos e permite iniciar o Windows Defender Offline.
+
 **Desativar VBS:** Altera o bcdedit e o registro para desligar o Virtualization-Based Security e a Integridade de Memória, liberando desempenho bruto de CPU para jogos intensos.
 
 **Limpeza Nuclear (ResetBase):** Força o DISM a destruir backups de atualizações antigas (/ResetBase). Libera dezenas de gigabytes, mas impossibilita a desinstalação do update atual.
@@ -108,6 +118,8 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 **Modo Pânico:** Reseta o Firewall do Windows aos padrões de fábrica e desbloqueia a conta nativa e oculta de Super Administrador.
 
 **Boot Seguro:** Configura o bcdedit para forçar a máquina a reiniciar diretamente no Modo de Segurança com Rede.
+
+**Decrapifier (Assassino de Bloatware):** Módulo agressivo para limpar lixo de fábrica. Varre e desinstala à força todos os programas patrocinados e bloatwares que vêm pré-instalados em PCs novos (McAfee, Norton, TikTok, Candy Crush, etc.).
 
 <img width="797" height="463" alt="Captura de tela 2026-02-26 230853" src="https://github.com/user-attachments/assets/b4230aee-fdaf-47bb-83d5-f961ecd7861f" />
 
@@ -144,6 +156,8 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 
 **Privilégios Máximos:** O utilitário é iniciado automaticamente com permissões de Administrador, garantindo que o técnico remoto possa interagir com ecrãs de segurança (UAC) e realizar reparações profundas sem perder a conexão.
 
+**Duas Vias de Ação:** O técnico pode escolher o tradicional AnyDesk ou, caso sofra com bloqueios de limite comercial, optar pelo download imediato do RustDesk (plano B open-source).
+
 <img width="815" height="637" alt="Captura de tela 2026-02-27 022643" src="https://github.com/user-attachments/assets/861a651b-ca65-4452-aa81-7029d4e3c868" />
 
 ---
@@ -174,7 +188,12 @@ O sistema é modular e dividido em categorias principais. Abaixo, detalhamos o q
 
 ---
 
-## 🏆 Créditos e Ferramentas de Terceiros
+### 🌍 [11] Idiomas / Languages
+**Suporte Multi-idioma:** O menu permite alternar e baixar futuras atualizações da ferramenta com as interfaces em Inglês (EN) e Espanhol (ES).
+
+---
+
+###🏆 Créditos e Ferramentas de Terceiros
 Este toolkit automatiza muitos processos e também se apoia nos ombros de gigantes do código aberto. O Mr Evan IRS executa integrações com os seguintes projetos de terceiros:
 
 **[Microsoft Activation Scripts (MAS)](https://github.com/massgravel/Microsoft-Activation-Scripts):** Criado por massgravel. Utilizado no menu [2] para ativação legítima via HWID/KMS38 do Windows e Office.
@@ -189,23 +208,35 @@ Todo o restante do código em PowerShell, lógica de menus e rotinas de automaç
 
 ---
 
-## 📜 Histórico de Evolução
-🚀 v1.0 - Lançamento Oficial (Consolidação Completa)
-A versão 1.0 marca a transição de um script avançado de otimização para um ecossistema completo de suporte técnico, estruturado com 10 módulos distintos e documentação rigorosa de segurança. Principais novidades consolidadas neste lançamento:
+### 📜 Histórico de Evolução
+🚀 **v1.2** - O Canivete Suíço Definitivo (Automação Total)
+Elevação do toolkit ao seu grau máximo de automação de bancada, focado em agilizar o trabalho pós-formatação:
 
-Nova Interface Gráfica: Criação de um cabeçalho proeminente e legível em blocos Unicode gigantes (ANSI Shadow).
+**Kit Pós-Formatação Automático:** Integração completa do Winget para a instalação silenciosa de utilitários como Chrome (com injeção automática de AdBlock), WhatsApp, WinRAR, PDF24, ChatGPT e muito mais.
 
-Módulo de Restauração (Menu 8): Adicionado arsenal para reverter configurações de fábrica, consertar a Microsoft Store, re-registrar aplicativos do Menu Iniciar corrompidos e restaurar o Defender.
+**Assassino de Bloatware (Decrapifier):** Módulo agressivo para limpar lixo de fábrica e programas patrocinados em PCs recém-comprados.
 
-Módulo de Suporte Remoto (Menu 9): Implementação de download automático e execução instantânea do AnyDesk com privilégios de administrador herdados, evitando bloqueios de UAC durante o suporte.
+**Backup Inteligente de Drivers:** Exportação total de drivers de terceiros com apenas um clique para salvaguarda antes da formatação.
 
-Módulo WinPE / Recuperação Offline (Menu 10): Criação de uma suíte vitalícia para uso via Pendrive Bootável, contendo ferramentas como SFC/DISM offline, reparos lógicos de disco, reparos do setor de boot (MBR/BCD), backup em massa à prova de falhas com o Robocopy e uma rotina de bypass automatizado (utilman.exe) para quebra emergencial de senha local.
+**Módulo de Idiomas:** Implementada a secção 11 para abranger o mercado internacional, suportando rotinas futuras em Inglês e Espanhol.
 
-Segurança e Ética: Integração completa de políticas SECURITY.md, CODE_OF_CONDUCT.md e adequação aos princípios de proteção de dados e LGPD no repousitório e script.
+**Finalização Polida:** Melhoria no encerramento (opção 0) garantindo a finalização limpa e profissional do processo.
+
+🚀 **v1.1** - A Máquina de Guerra (Desinfeção)
+Foco em combates profundos contra vírus e na geração de diagnósticos:
+
+Criação do Protocolo de Desinfeção Nuclear (8 Fases via MSERT e Defender Offline).
+
+Exportação de Laudo de Hardware em .txt para clientes.
+
+Inclusão de Bypass de Windows 11 (Injeção de TPM/CPU) e integração do RustDesk como alternativa de suporte remoto.
+
+🚀 **v1.0** - Lançamento Oficial (Consolidação Completa)
+Estruturação da interface em 10 módulos com foco em reparações de ambiente real: interface visual em ANSI Shadow, ferramentas completas para WinPE (Recuperação offline) e quebra emergencial de palavras-passe via utilman.exe.
 
 ---
 
-## 📋 Requisitos e Licença
+### 📋 Requisitos e Licença
 **SO:** Windows 10 ou Windows 11.
 
 **Ambiente:** PowerShell 5.1 ou superior.

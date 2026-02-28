@@ -71,6 +71,28 @@ Inclui:
 
 ---
 
+# 🚑 Recuperação Offline (Modo Boot / WinPE)
+A ferramenta definitiva de resgate de ecrã azul. Para usar, arranque o PC a partir de uma PenDrive com o instalador do Windows, pressione **Shift+F10** para abrir o CMD e corra o script.
+- Repara tabelas de partições e o **Winload.efi** com comandos como **bootrec** e **bcdboot**.
+- Extrai logs de falha (SrtTrail.txt) e copia ficheiros bloqueados com **Robocopy**.
+
+## 📖 Guia Passo a Passo: Quebra ou Alteração de Palavra-Passe (Bypass Utilman)
+1. Prepare a PenDrive: Salve o MrEvanToolkit.ps1 na raiz de uma PenDrive de instalação do Windows.
+
+2. Dê o Boot: Inicie o PC pela PenDrive. Quando aparecer a tela do Windows, prima Shift + F10 para abrir o CMD.
+
+3. Abra o Script: Digite powershell, dê Enter. Digite o caminho da PenDrive (ex: D:\MrEvanToolkit.ps1).
+
+4. Injete o Código: Vá à opção 10, depois 5. Escolha a letra do seu disco. O script substituirá a ferramenta de Acessibilidade pelo CMD (utilman.exe).
+
+5. Mude a Senha: Reinicie o PC normalmente. No ecrã de login, clique no ícone de "Acessibilidade". Abrir-se-á um terminal negro (Nível Root).
+
+6. Digite control userpasswords2 para redefinir qualquer senha ou net user [nome_do_usuario] *.
+
+7. ⚠️ Limpe os Rastos: Após entrar no Windows, repita o processo de Boot pela PenDrive, vá novamente à Opção 10 > 5 e escolha desfazer a injeção para fechar a vulnerabilidade.
+
+---
+
 # 🔐 Enterprise Documentation (Privado)
 
 Os seguintes módulos fazem parte da documentação técnica privada:

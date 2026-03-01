@@ -1,11 +1,9 @@
-﻿<# 
-  =============================================================================
-  MR EVAN INTELLIGENT REPAIR SYSTEM
-  Console Avancado de Manutencao, Otimizacao e Seguranca Cibernetica.
-  Versao: v2.0 Elite (Definitive SOC Edition)
-  Autor: Evandro Lemos
-  =============================================================================
-#>
+﻿# =============================================================================
+# MR EVAN INTELLIGENT REPAIR SYSTEM
+# Console Avancado de Manutencao, Otimizacao e Seguranca Cibernetica.
+# Versao: v2.0 Elite (Definitive SOC Edition)
+# Autor: Evandro Lemos
+# =============================================================================
 
 $ErrorActionPreference = "SilentlyContinue"
 $MRIRS_Version         = "v2.0 Elite"
@@ -42,7 +40,7 @@ function Write-MRLog {
 Write-MRLog "Sessao v2.0 Elite iniciada." "START"
 
 # -----------------------------------------------------------------------------
-# FUNCAO EULA (DECLARADA ANTES DE SER CHAMADA)
+# FUNCAO EULA (WEB SERVER EMBUTIDO NA MEMORIA)
 # -----------------------------------------------------------------------------
 function Start-EULAListener {
 
@@ -62,50 +60,97 @@ function Start-EULAListener {
 
     Write-Host "Abrindo EULA no navegador..." -ForegroundColor Yellow
 
-    $scriptDir = Split-Path -Parent $PSCommandPath
-    if (-not $scriptDir) { $scriptDir = $PSScriptRoot }
-    if (-not $scriptDir) { $scriptDir = (Get-Location).Path }
-
-    $eulaPath = Join-Path $scriptDir "eula.html"
-
-    if (-not (Test-Path $eulaPath)) {
-        Write-Host "Arquivo eula.html nao encontrado." -ForegroundColor Red
-        Start-Sleep 4
-        exit
+    # O HTML FICA DENTRO DO SCRIPT (Nao precisa mais do arquivo eula.html)
+    $eulaHTML = @"
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Mr Evan IRS - EULA</title>
+<style>
+body { background-color: #0d1117; color: #c9d1d9; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+.header { background-color: #161b22; padding: 20px; text-align: center; border-bottom: 1px solid #30363d; }
+.container { max-width: 900px; margin: auto; padding: 40px; }
+h1, h2 { color: #58a6ff; }
+.warning { background-color: #161b22; border-left: 5px solid #ff4d4d; padding: 15px; margin: 20px 0; }
+.buttons { text-align: center; padding: 20px; border-top: 1px solid #30363d; background-color: #161b22; }
+button { padding: 12px 25px; margin: 10px; border: none; font-size: 16px; cursor: pointer; border-radius: 5px; }
+.accept { background-color: #238636; color: white; }
+.reject { background-color: #da3633; color: white; }
+.accept:disabled { background-color: #2d333b; cursor: pointer; }
+footer { text-align: center; font-size: 12px; opacity: 0.6; padding: 10px; }
+</style>
+<script>
+function enableButton() {
+    const container = document.getElementById("scrollBox");
+    const button = document.getElementById("acceptBtn");
+    if (container.scrollTop + container.clientHeight >= container.scrollHeight - 10) {
+        button.disabled = false;
     }
+}
+function acceptEULA() {
+    fetch("/accept").then(() => {
+        document.body.innerHTML = '<div style="text-align:center; margin-top:120px;"><h2 style="color:#3fb950;">CONFIRMAÇÃO REGISTRADA</h2><p>Você aceitou os termos legais.</p><p>Pode fechar esta página.</p></div>';
+    });
+}
+function rejectEULA() {
+    fetch("/reject").then(() => {
+        document.body.innerHTML = '<div style="text-align:center; margin-top:120px;"><h2 style="color:#ff4d4d;">ACESSO NEGADO</h2><p>Você optou por não aceitar os termos.</p><p>O sistema será encerrado.</p></div>';
+    });
+}
+</script>
+</head>
+<body>
+<div class="header">
+<h1>END USER LICENSE AGREEMENT</h1><h2>Contrato de Licença de Usuário Final</h2><p>Mr Evan Intelligent Repair System v2.0 Elite</p>
+</div>
+<div class="container" id="scrollBox" onscroll="enableButton()" style="max-height: 400px; overflow-y: scroll;">
+<p><strong>Autor:</strong> Evandro Lemos (Mr Evan IRS)<br><strong>Ano:</strong> 2026</p>
+<div class="warning"><strong>IMPORTANTE:</strong><br>Leia completamente este contrato antes de aceitar. Você deve rolar até o final para habilitar o botão de aceitação.</div>
+<hr>
+<h2>1. ACEITAÇÃO DOS TERMOS</h2><p>Ao executar este software, você declara que leu, compreendeu e concorda integralmente com este contrato.</p>
+<h2>2. CONCESSÃO DE LICENÇA</h2><p>Licença limitada, revogável, não exclusiva e intransferível para uso pessoal e técnico autorizado.</p>
+<h2>3. USOS PROIBIDOS</h2><ul><li>Acesso não autorizado a sistemas</li><li>Uso comercial sem autorização formal</li><li>Redistribuição ou revenda</li><li>Remoção de créditos</li><li>Engenharia reversa para exploração comercial</li></ul>
+<h2>4. OPERAÇÕES DE ALTO RISCO</h2><ul><li>Alterações no Registro</li><li>Modificações de Firewall</li><li>Serviços críticos</li><li>Rede e BCD</li><li>Recuperação via utilman.exe</li></ul>
+<div class="warning">O uso inadequado pode causar:<ul><li>Instabilidade</li><li>Falha de boot</li><li>Perda de dados</li><li>Corrupção do sistema</li></ul>Você assume total responsabilidade.</div>
+<h2>5. AUSÊNCIA DE GARANTIA</h2><p>O SOFTWARE É FORNECIDO "COMO ESTÁ".</p>
+<h2>6. LIMITAÇÃO DE RESPONSABILIDADE</h2><ul><li>Perda de dados</li><li>Prejuízos financeiros</li><li>Danos indiretos</li><li>Interrupções operacionais</li></ul>
+<h2>7. CONFORMIDADE LEGAL</h2><p>O usuário é responsável por cumprir as leis locais e internacionais.</p>
+<h2>8. RESCISÃO</h2><p>A violação de qualquer termo encerra imediatamente esta licença.</p>
+<h2>9. DECLARAÇÃO FINAL</h2><p>Ao clicar em "EU ACEITO", você confirma ciência total dos riscos e concordância integral com os termos.</p><br><br>
+</div>
+<div class="buttons">
+<button class="accept" id="acceptBtn" onclick="acceptEULA()" disabled>EU ACEITO</button>
+<button class="reject" onclick="rejectEULA()">NÃO ACEITO</button>
+</div>
+<footer>© 2026 Evandro Lemos – Mr Evan Intelligent Repair System<br>Todos os direitos reservados.</footer>
+</body>
+</html>
+"@
 
     Start-Process "http://localhost:$port/"
 
     while (-not $accepted) {
-
         $context = $listener.GetContext()
         $request = $context.Request
         $response = $context.Response
 
         if ($request.Url.AbsolutePath -eq "/") {
-
-            $html = Get-Content $eulaPath -Raw -Encoding UTF8
-            $buffer = [System.Text.Encoding]::UTF8.GetBytes($html)
+            $buffer = [System.Text.Encoding]::UTF8.GetBytes($eulaHTML)
             $response.ContentType = "text/html"
             $response.ContentLength64 = $buffer.Length
             $response.OutputStream.Write($buffer,0,$buffer.Length)
             $response.Close()
         }
-
         elseif ($request.Url.AbsolutePath -eq "/accept") {
-
-            Write-MRLog "EULA aceito pelo usuario." "EULA"
-
+            try { Write-MRLog "EULA aceito pelo usuario." "EULA" } catch {}
             $msg = "Confirmacao recebida."
             $buffer = [System.Text.Encoding]::UTF8.GetBytes($msg)
             $response.OutputStream.Write($buffer,0,$buffer.Length)
             $response.Close()
-
             $accepted = $true
         }
-
         elseif ($request.Url.AbsolutePath -eq "/reject") {
-
             Write-Host "`nACESSO NEGADO." -ForegroundColor Red
             Start-Sleep 4
             $listener.Stop()

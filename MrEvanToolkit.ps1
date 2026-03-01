@@ -1558,7 +1558,7 @@ function Invoke-PhantomBypass {
     Write-Host " [1] Utilman (Botao de Acessibilidade no canto da tela)" -ForegroundColor Cyan
     Write-Host " [2] Sethc   (O Fantasma: Apertar a tecla SHIFT 5 vezes)" -ForegroundColor Cyan
     Write-Host " [3] OSK     (Teclado Virtual na tela de bloqueio)" -ForegroundColor Cyan
-    Write-Host " [4] DESFAZER / LIMPAR RASTROS (Restaurar Seguranca Original)" -ForegroundColor Green
+    Write-Host " [4] DESFAZER / LIMPAR RASTROS (Restaurar Seguranca Original)" -ForegroundColor Cyan
     Write-Host "`n [0] Voltar" -ForegroundColor DarkGray
     
     $bOpt = Read-Host "`nDigite a opcao desejada"
@@ -1619,7 +1619,7 @@ function Open-RecoveryMenu {
         Write-Host " [2] Verificar integridade do sistema (SFC /offbootdir)" -ForegroundColor Cyan
         Write-Host " [3] Reparar Boot (Bootrec /fixmbr, /fixboot, /rebuildbcd)" -ForegroundColor Cyan
         Write-Host " [4] Verificar erros no disco (CHKDSK /f /r)" -ForegroundColor Cyan
-        Write-Host " [5] Injetar Bypass Fantasma Multi-Vetor (Root)    " -ForegroundColor Red
+        Write-Host " [5] Injetar Bypass Fantasma Multi-Vetor (Root)    " -ForegroundColor Cyan
         Write-Host " [6] Backup Automatico de Usuarios (Robocopy offline)" -ForegroundColor Cyan
         Write-Host " [7] Detectar Criptografia BitLocker" -ForegroundColor Cyan
         Write-Host " [8] Restaurar BCD (Bcdboot)" -ForegroundColor Cyan

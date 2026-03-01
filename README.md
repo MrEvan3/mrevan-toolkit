@@ -1,7 +1,6 @@
 # 🛠️ Mr Evan Intelligent Repair System (v2.0 Elite)
 
-> A Estação de Batalha Definitiva para Técnicos, Engenheiros SOC e Power Users.
-
+> Ferramenta desenvolvida para  manutenção e segurança de nível corporativo feitas para todos. Limpe, repare e proteja o seu Windows de forma simples e segura.
 Desenvolvido por **Evandro Lemos (Mr Evan IRS)**, o Mr Evan Intelligent Repair System é um console avançado em PowerShell para auditoria, otimização, reparo profundo e inteligência de ameaças no Windows 10 e 11.
 
 Com arquitetura modular, dashboard HTML e integração com APIs de Threat Intelligence, o projeto consolida operações críticas em um único ambiente técnico.

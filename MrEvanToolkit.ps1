@@ -40,7 +40,7 @@ function Write-MRLog {
 Write-MRLog "Sessao v2.0 Elite iniciada." "START"
 
 # -----------------------------------------------------------------------------
-# FUNCAO EULA (WEB SERVER EMBUTIDO NA MEMORIA)
+# FUNCAO EULA (WEB SERVER EMBUTIDO NA MEMORIA COM VISUAL ELITE)
 # -----------------------------------------------------------------------------
 function Start-EULAListener {
 
@@ -58,72 +58,212 @@ function Start-EULAListener {
         exit
     }
 
-    Write-Host "Abrindo EULA no navegador..." -ForegroundColor Yellow
+    Write-Host "Abrindo painel de seguranca no navegador..." -ForegroundColor Yellow
 
-    # O HTML FICA DENTRO DO SCRIPT (Nao precisa mais do arquivo eula.html)
+    # O HTML FICA DENTRO DO SCRIPT (Visual Corporativo Moderno)
     $eulaHTML = @"
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Mr Evan IRS - EULA</title>
+<title>Mr Evan IRS - Licença e Termos</title>
 <style>
-body { background-color: #0d1117; color: #c9d1d9; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-.header { background-color: #161b22; padding: 20px; text-align: center; border-bottom: 1px solid #30363d; }
-.container { max-width: 900px; margin: auto; padding: 40px; }
-h1, h2 { color: #58a6ff; }
-.warning { background-color: #161b22; border-left: 5px solid #ff4d4d; padding: 15px; margin: 20px 0; }
-.buttons { text-align: center; padding: 20px; border-top: 1px solid #30363d; background-color: #161b22; }
-button { padding: 12px 25px; margin: 10px; border: none; font-size: 16px; cursor: pointer; border-radius: 5px; }
-.accept { background-color: #238636; color: white; }
-.reject { background-color: #da3633; color: white; }
-.accept:disabled { background-color: #2d333b; cursor: pointer; }
-footer { text-align: center; font-size: 12px; opacity: 0.6; padding: 10px; }
+    :root {
+        --bg: #09090b;
+        --surface: #18181b;
+        --text-primary: #f4f4f5;
+        --text-secondary: #a1a1aa;
+        --accent: #38bdf8;
+        --danger: #ef4444;
+        --danger-bg: rgba(239, 68, 68, 0.1);
+        --success: #10b981;
+        --success-disabled: #064e3b;
+        --border: #27272a;
+    }
+    body {
+        background-color: var(--bg);
+        color: var(--text-primary);
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+    .wrapper {
+        background-color: var(--surface);
+        border-radius: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        width: 100%;
+        max-width: 750px;
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
+        border: 1px solid var(--border);
+    }
+    .header {
+        padding: 25px 30px;
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        background-color: #1f1f22;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+    .header h1 { margin: 0; font-size: 22px; color: var(--accent); letter-spacing: 0.5px; }
+    .header p { margin: 5px 0 0; color: var(--text-secondary); font-size: 13px; font-weight: 500;}
+    
+    .content {
+        padding: 30px 40px;
+        overflow-y: auto;
+        flex-grow: 1;
+        line-height: 1.7;
+        color: #d4d4d8;
+        font-size: 14px;
+    }
+    
+    /* Scrollbar Customizada Estilo Mac/Dark */
+    .content::-webkit-scrollbar { width: 8px; }
+    .content::-webkit-scrollbar-track { background: var(--bg); border-radius: 4px; }
+    .content::-webkit-scrollbar-thumb { background: #52525b; border-radius: 4px; }
+    .content::-webkit-scrollbar-thumb:hover { background: #71717a; }
+
+    h2 { color: var(--text-primary); font-size: 16px; margin-top: 30px; border-bottom: 1px solid var(--border); padding-bottom: 8px;}
+    h2:first-of-type { margin-top: 0; }
+    
+    .warning-box {
+        background-color: var(--danger-bg);
+        border-left: 4px solid var(--danger);
+        padding: 15px 20px;
+        border-radius: 4px;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    .warning-box strong { color: var(--danger); }
+    
+    ul { padding-left: 20px; margin-top: 10px;}
+    li { margin-bottom: 8px; }
+
+    .footer-actions {
+        padding: 20px 30px;
+        background-color: #1f1f22;
+        border-top: 1px solid var(--border);
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .scroll-hint { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;}
+    .pulse-icon { display: inline-block; width: 8px; height: 8px; background-color: var(--danger); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+    .buttons { display: flex; gap: 12px; }
+    button {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-accept { background-color: var(--success); color: #000; }
+    .btn-accept:hover:not(:disabled) { background-color: #34d399; transform: translateY(-1px); }
+    .btn-accept:disabled { background-color: var(--success-disabled); color: #9ca3af; cursor: not-allowed; }
+    
+    .btn-reject { background-color: transparent; color: var(--danger); border: 1px solid var(--danger); }
+    .btn-reject:hover { background-color: var(--danger-bg); }
+
+    .status-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; }
+    .status-screen h2 { border: none; font-size: 24px; margin-bottom: 10px; padding-bottom: 0; }
+    .status-success h2 { color: var(--success); }
+    .status-reject h2 { color: var(--danger); }
 </style>
 <script>
-function enableButton() {
-    const container = document.getElementById("scrollBox");
-    const button = document.getElementById("acceptBtn");
-    if (container.scrollTop + container.clientHeight >= container.scrollHeight - 10) {
-        button.disabled = false;
+    function checkScroll() {
+        const content = document.getElementById("scrollBox");
+        const button = document.getElementById("acceptBtn");
+        const hintText = document.getElementById("hintText");
+        const pulse = document.getElementById("pulseDot");
+        
+        // Margem de erro de 20px para facilitar a liberação
+        if (content.scrollTop + content.clientHeight >= content.scrollHeight - 20) {
+            button.disabled = false;
+            pulse.style.backgroundColor = "#10b981";
+            pulse.style.animation = "none";
+            hintText.innerText = "Leitura concluída. Você pode aceitar.";
+            hintText.style.color = "#10b981";
+        }
     }
-}
-function acceptEULA() {
-    fetch("/accept").then(() => {
-        document.body.innerHTML = '<div style="text-align:center; margin-top:120px;"><h2 style="color:#3fb950;">CONFIRMAÇÃO REGISTRADA</h2><p>Você aceitou os termos legais.</p><p>Pode fechar esta página.</p></div>';
-    });
-}
-function rejectEULA() {
-    fetch("/reject").then(() => {
-        document.body.innerHTML = '<div style="text-align:center; margin-top:120px;"><h2 style="color:#ff4d4d;">ACESSO NEGADO</h2><p>Você optou por não aceitar os termos.</p><p>O sistema será encerrado.</p></div>';
-    });
-}
+    function acceptEULA() {
+        fetch("/accept").then(() => {
+            document.body.innerHTML = '<div class="wrapper"><div class="status-screen status-success"><h2>✓ Acesso Liberado</h2><p style="color:#a1a1aa;">Os termos foram aceitos e registrados pelo sistema.</p><h3 style="color:#f4f4f5; margin-top:20px;">Você pode fechar esta aba com segurança.</h3></div></div>';
+        }).catch(() => alert("Erro na comunicação com o Mr Evan IRS."));
+    }
+    function rejectEULA() {
+        fetch("/reject").then(() => {
+            document.body.innerHTML = '<div class="wrapper"><div class="status-screen status-reject"><h2>✕ Acesso Negado</h2><p style="color:#a1a1aa;">Você optou por não aceitar as políticas de uso.</p><h3 style="color:#f4f4f5; margin-top:20px;">O script foi encerrado. Pode fechar esta aba.</h3></div></div>';
+        }).catch(() => alert("Erro na comunicação com o Mr Evan IRS."));
+    }
 </script>
 </head>
 <body>
-<div class="header">
-<h1>END USER LICENSE AGREEMENT</h1><h2>Contrato de Licença de Usuário Final</h2><p>Mr Evan Intelligent Repair System v2.0 Elite</p>
+<div class="wrapper">
+    <div class="header">
+        <h1>END USER LICENSE AGREEMENT</h1>
+        <p>CONTRATO DE LICENÇA DE USUÁRIO FINAL — MR EVAN IRS (v2.0 Elite)</p>
+    </div>
+    
+    <div class="content" id="scrollBox" onscroll="checkScroll()">
+        <div class="warning-box">
+            <strong>AVISO DE SEGURANÇA:</strong> Leia atentamente as regras abaixo. Você precisa <strong>rolar a página até o final</strong> para habilitar o botão de aceite.
+        </div>
+
+        <h2>1. ACEITAÇÃO DOS TERMOS</h2>
+        <p>Ao executar este software, você declara que leu, compreendeu e concorda integralmente com este contrato firmado com o autor <strong>Evandro Lemos</strong>.</p>
+
+        <h2>2. CONCESSÃO DE LICENÇA E USO</h2>
+        <p>O Mr Evan IRS é distribuído sob uma licença limitada, revogável e intransferível. Este sistema é liberado estritamente para uso <strong>pessoal e técnico autorizado</strong> em equipamentos próprios ou de clientes que deram consentimento explícito.</p>
+
+        <h2>3. USOS ESTRITAMENTE PROIBIDOS</h2>
+        <ul>
+            <li>Uso da ferramenta para invasão (Hacking) ou acesso não autorizado a sistemas.</li>
+            <li>Comercialização, revenda ou distribuição desta ferramenta como um serviço pago (SaaS).</li>
+            <li>Ocultação ou remoção dos créditos do desenvolvedor original.</li>
+            <li>Uso das ferramentas de bypass (utilman.exe) em máquinas furtadas ou sob investigação.</li>
+        </ul>
+
+        <h2>4. OPERAÇÕES DE ALTO RISCO (KERNEL)</h2>
+        <p>Este sistema não é um simples "limpador". Ele realiza modificações em nível de Kernel (Núcleo) do Windows, interagindo com:</p>
+        <ul>
+            <li>Políticas de Grupo (GPO) e Registro do Windows (Regedit).</li>
+            <li>Configurações de rede, Winsock, DNS e Firewall.</li>
+            <li>Carregador de inicialização do Windows (BCD e MBR).</li>
+        </ul>
+        <div class="warning-box" style="margin-top: 10px;">
+            O uso irresponsável de módulos SOC ou de Recuperação Offline pode causar <strong>Tela Azul da Morte (BSOD)</strong>, quebra de conectividade e corrupção de boot. Toda e qualquer alteração é feita por sua conta e risco.
+        </div>
+
+        <h2>5. PRIVACIDADE E TELEMETRIA (LGPD)</h2>
+        <p>A ferramenta roda 100% localmente e não envia dados do seu computador para servidores ocultos. Consultas em APIs de Threat Intelligence (ipinfo.io e VirusTotal) são disparadas unicamente a seu comando, não incluindo dados pessoais sensíveis.</p>
+
+        <h2>6. AUSÊNCIA DE GARANTIAS</h2>
+        <p>O SOFTWARE É FORNECIDO "COMO ESTÁ". Em nenhuma circunstância o desenvolvedor será responsabilizado por perda de dados, danos ao hardware ou interrupção de negócios decorrentes do uso da ferramenta.</p>
+    </div>
+
+    <div class="footer-actions">
+        <div class="scroll-hint">
+            <span class="pulse-icon" id="pulseDot"></span>
+            <span id="hintText">Role a caixa de texto até o fim para liberar acesso.</span>
+        </div>
+        <div class="buttons">
+            <button class="btn-reject" onclick="rejectEULA()">RECUSAR</button>
+            <button class="btn-accept" id="acceptBtn" onclick="acceptEULA()" disabled>EU CONCORDO</button>
+        </div>
+    </div>
 </div>
-<div class="container" id="scrollBox" onscroll="enableButton()" style="max-height: 400px; overflow-y: scroll;">
-<p><strong>Autor:</strong> Evandro Lemos (Mr Evan IRS)<br><strong>Ano:</strong> 2026</p>
-<div class="warning"><strong>IMPORTANTE:</strong><br>Leia completamente este contrato antes de aceitar. Você deve rolar até o final para habilitar o botão de aceitação.</div>
-<hr>
-<h2>1. ACEITAÇÃO DOS TERMOS</h2><p>Ao executar este software, você declara que leu, compreendeu e concorda integralmente com este contrato.</p>
-<h2>2. CONCESSÃO DE LICENÇA</h2><p>Licença limitada, revogável, não exclusiva e intransferível para uso pessoal e técnico autorizado.</p>
-<h2>3. USOS PROIBIDOS</h2><ul><li>Acesso não autorizado a sistemas</li><li>Uso comercial sem autorização formal</li><li>Redistribuição ou revenda</li><li>Remoção de créditos</li><li>Engenharia reversa para exploração comercial</li></ul>
-<h2>4. OPERAÇÕES DE ALTO RISCO</h2><ul><li>Alterações no Registro</li><li>Modificações de Firewall</li><li>Serviços críticos</li><li>Rede e BCD</li><li>Recuperação via utilman.exe</li></ul>
-<div class="warning">O uso inadequado pode causar:<ul><li>Instabilidade</li><li>Falha de boot</li><li>Perda de dados</li><li>Corrupção do sistema</li></ul>Você assume total responsabilidade.</div>
-<h2>5. AUSÊNCIA DE GARANTIA</h2><p>O SOFTWARE É FORNECIDO "COMO ESTÁ".</p>
-<h2>6. LIMITAÇÃO DE RESPONSABILIDADE</h2><ul><li>Perda de dados</li><li>Prejuízos financeiros</li><li>Danos indiretos</li><li>Interrupções operacionais</li></ul>
-<h2>7. CONFORMIDADE LEGAL</h2><p>O usuário é responsável por cumprir as leis locais e internacionais.</p>
-<h2>8. RESCISÃO</h2><p>A violação de qualquer termo encerra imediatamente esta licença.</p>
-<h2>9. DECLARAÇÃO FINAL</h2><p>Ao clicar em "EU ACEITO", você confirma ciência total dos riscos e concordância integral com os termos.</p><br><br>
-</div>
-<div class="buttons">
-<button class="accept" id="acceptBtn" onclick="acceptEULA()" disabled>EU ACEITO</button>
-<button class="reject" onclick="rejectEULA()">NÃO ACEITO</button>
-</div>
-<footer>© 2026 Evandro Lemos – Mr Evan Intelligent Repair System<br>Todos os direitos reservados.</footer>
 </body>
 </html>
 "@
@@ -1125,163 +1265,6 @@ function Run-PersistenceCheck {
 function Run-NetworkDeepScan {
     Show-Header
     Write-Host "=== NETWORK DEEP SCAN (AUDITORIA DE INFRAESTRUTURA) ===" -ForegroundColor Red
-    Write-Host "Inspecionando portas abertas, rotas e tuneis de rede...`n" -ForegroundColor Yellow
-    Write-Host "[+] Portas Locais Escutando (Listening - Possiveis Backdoors):" -ForegroundColor Cyan
-    try { $ports = Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, OwningProcess | Sort-Object LocalPort -Unique; foreach ($p in $ports) { $procName = "Desconhecido"; if ($p.OwningProcess -gt 0) { $proc = Get-Process -Id $p.OwningProcess -ErrorAction SilentlyContinue; if ($proc) { $procName = $proc.ProcessName } }; Write-Host "  -> Porta: $($p.LocalPort) | IP: $($p.LocalAddress) | Proc: $procName (PID: $($p.OwningProcess))" -ForegroundColor DarkGray } } catch {}
-    Write-Host "`n[+] Analise de Proxy no Sistema:" -ForegroundColor Cyan
-    try { $proxy = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -ErrorAction SilentlyContinue; if ($proxy.ProxyEnable -eq 1) { Write-Host "  -> [!] ALERTA: Servidor Proxy ATIVADO ($($proxy.ProxyServer))" -ForegroundColor Red } else { Write-Host "  -> [OK] Nenhum Proxy ativo." -ForegroundColor Green } } catch {}
-    Write-Host "`n[+] Deteccao de VPNs e Interfaces Virtuais (Tunnels):" -ForegroundColor Cyan
-    try { $vpns = Get-NetAdapter | Where-Object { $_.InterfaceDescription -match "VPN|TAP|TUN|WireGuard|OpenVPN|Cisco" -and $_.Status -eq "Up" }; if ($vpns) { foreach ($v in $vpns) { Write-Host "  -> [!] VPN ATIVA: $($v.InterfaceDescription)" -ForegroundColor Yellow } } else { Write-Host "  -> [OK] Nenhuma VPN ativa detectada." -ForegroundColor Green } } catch {}
-    Pause-MR
-}
-
-function Run-SystemIntegrityScan {
-    Show-Header
-    Write-Host "=== ANALISADOR DE INTEGRIDADE DO SISTEMA (CORE HASHES) ===" -ForegroundColor Red
-    Write-Host "Verificando assinaturas digitais dos nucleos criticos do Windows...`n" -ForegroundColor Yellow
-    $coreFiles = @("$env:WINDIR\System32\cmd.exe", "$env:WINDIR\explorer.exe", "$env:WINDIR\System32\lsass.exe", "$env:WINDIR\System32\winlogon.exe", "$env:WINDIR\System32\svchost.exe", "$env:WINDIR\System32\taskmgr.exe")
-    foreach ($file in $coreFiles) {
-        if (Test-Path $file) {
-            try { $sig = Get-AuthenticodeSignature -FilePath $file -ErrorAction SilentlyContinue; if ($sig.Status -eq "Valid") { Write-Host "[OK] Original   -> $(Split-Path $file -Leaf)" -ForegroundColor Green -NoNewline; Write-Host " (Assinado: $($sig.SignerCertificate.Subject))" -ForegroundColor DarkGray } else { Write-Host "[!] CORROMPIDO -> $(Split-Path $file -Leaf)" -ForegroundColor Red -NoNewline; Write-Host " (Invalido: $($sig.StatusMessage))" -ForegroundColor Yellow } } catch {}
-        } else { Write-Host "[X] DESAPARECIDO -> $(Split-Path $file -Leaf)" -ForegroundColor Red }
-        Start-Sleep -Milliseconds 200
-    }
-    Write-Host "`n* Nota: Arquivos corrompidos indicam possivel infeccao Rootkit ou dano grave." -ForegroundColor Yellow; Pause-MR
-}
-
-function Run-GodModeUnbrick {
-    Show-Header
-    Write-Host "=== GOD MODE UNBRICK (SALVA-VIDAS DE SISTEMA) ===" -ForegroundColor Green
-    
-    # ROLLBACK AUTOMATICO ANTES DE ALTERAR!
-    Invoke-AutoRollback -FeatureName "Policies_System_HKLM" -RegKey "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-    Invoke-AutoRollback -FeatureName "Policies_System_HKCU" -RegKey "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System"
-
-    Write-Host "Estourando cadeados de malware e GPOs corrompidas..." -ForegroundColor Yellow
-    $keys = @("HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System", "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")
-    foreach ($k in $keys) {
-        try { if (-not (Test-Path $k)) { New-Item -Path $k -Force -ErrorAction SilentlyContinue | Out-Null } } catch {}
-        try { Set-ItemProperty -Path $k -Name "DisableTaskMgr" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "DisableRegistryTools" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "DisableCMD" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "NoFolderOptions" -Value 0 -ErrorAction SilentlyContinue } catch {}
-    }
-    try { Remove-Item "$env:windir\System32\GroupPolicy" -Recurse -Force -ErrorAction SilentlyContinue; gpupdate /force | Out-Null } catch {}
-    Write-Host "Paineis administrativos desalgemados!" -ForegroundColor Green; Pause-MR
-}
-
-function Open-TechMenu {
-    do {
-        Show-Header
-        Write-Host "=== MODO TECNICO AVANCADO (DANGER ZONE & SOC) ===" -ForegroundColor Red
-        Write-Host ""
-        
-        Write-Host " --- FORENSE E CIBERSEGURANCA (ELITE) ---" -ForegroundColor DarkGray
-        Write-Host " [1] RADAR DE ESPIONAGEM          " -ForegroundColor Magenta -NoNewline
-        Write-Host "[VIRUS] " -ForegroundColor Red -NoNewline
-        Write-Host "- Analisa conexoes ao vivo via API (ipinfo.io)" -ForegroundColor Gray
-        
-        Write-Host " [2] ANALISE EDR (VIRUSTOTAL)     " -ForegroundColor Magenta -NoNewline
-        Write-Host "[VIRUS] " -ForegroundColor Red -NoNewline
-        Write-Host "- Calcula Hash de AppData contra 70 motores" -ForegroundColor Gray
-        
-        Write-Host " [3] AUDITORIA DE SEGURANCA LOC.  " -ForegroundColor Magenta -NoNewline
-        Write-Host "[SOC]   " -ForegroundColor Red -NoNewline
-        Write-Host "- Checa vulnerabilidades: SMBv1, RDP e UAC" -ForegroundColor Gray
-        
-        Write-Host " [4] VERIFICAR PERSISTENCIA       " -ForegroundColor Magenta -NoNewline
-        Write-Host "[SOC]   " -ForegroundColor Red -NoNewline
-        Write-Host "- Lista Tarefas e arquivos Startups suspeitos" -ForegroundColor Gray
-        
-        Write-Host " [5] NETWORK DEEP SCAN            " -ForegroundColor Magenta -NoNewline
-        Write-Host "[SOC]   " -ForegroundColor Red -NoNewline
-        Write-Host "- Inspeciona portas escutando, proxys e VPNs" -ForegroundColor Gray
-        
-        Write-Host " [6] INTEGRIDADE DO SISTEMA       " -ForegroundColor Magenta -NoNewline
-        Write-Host "[SOC]   " -ForegroundColor Red -NoNewline
-        Write-Host "- Analisa assinaturas digitais de DLLs e EXEs" -ForegroundColor Gray
-        
-        Write-Host " [7] GOD MODE UNBRICK (REGISTRO)  " -ForegroundColor Green -NoNewline
-        Write-Host "[VIRUS] " -ForegroundColor Red -NoNewline
-        Write-Host "- Destrava Regedit e CMD bloqueados por malware" -ForegroundColor Gray
-        
-        Write-Host " [8] PROTOCOLO DESINFECCAO NUCLEAR" -ForegroundColor Red -NoNewline
-        Write-Host "[VIRUS] " -ForegroundColor Red -NoNewline
-        Write-Host "- Corta malwares ocultos e abre Defender Offline" -ForegroundColor Gray
-        
-        Write-Host " [9] DECRAPIFIER (BLOATWARE)      " -ForegroundColor Red -NoNewline
-        Write-Host "[VIRUS] " -ForegroundColor Red -NoNewline
-        Write-Host "- Exclui McAfee, TikTok, Norton e patrocinados" -ForegroundColor Gray
-        
-        Write-Host " --- HARDENING E TWEAKS ---" -ForegroundColor DarkGray
-        Write-Host " [10] DESATIVAR TELEMETRIA        " -ForegroundColor Cyan -NoNewline
-        Write-Host "[TWEAK] " -ForegroundColor DarkYellow -NoNewline
-        Write-Host "- Corta coleta de dados da Microsoft" -ForegroundColor Gray
-        
-        Write-Host " [11] DESATIVAR VBS (VIRTUALIZACAO)" -ForegroundColor Cyan -NoNewline
-        Write-Host "[TWEAK] " -ForegroundColor DarkYellow -NoNewline
-        Write-Host "- Desliga camada de seguranca para ganhar FPS" -ForegroundColor Gray
-        
-        Write-Host " [12] RESETAR REDE WINSOCK        " -ForegroundColor Cyan -NoNewline
-        Write-Host "[TWEAK] " -ForegroundColor DarkYellow -NoNewline
-        Write-Host "- Refaz as tabelas TCP/IP de adaptadores mortos" -ForegroundColor Gray
-        
-        Write-Host "`n [0] VOLTAR                       " -ForegroundColor Yellow -NoNewline
-        Write-Host "[---]   " -ForegroundColor DarkGray -NoNewline
-        Write-Host "- Retornar ao Menu Inicial" -ForegroundColor Gray
-        Write-Host ""
-
-        $opt = Read-Host "Escolha uma opcao"
-        switch ($opt) {
-            "1" { Run-NetworkRadarAPI; Write-MRLog "Rodou Network Radar" }
-            "2" { Run-EDRAnalysis; Write-MRLog "Rodou Analise EDR VirusTotal" }
-            "3" { Run-LocalSecurityAudit; Write-MRLog "Rodou Auditoria Local SOC" }
-            "4" { Run-PersistenceCheck; Write-MRLog "Rodou Verificacao de Persistencia" }
-            "5" { Run-NetworkDeepScan; Write-MRLog "Rodou Network Deep Scan" }
-            "6" { Run-SystemIntegrityScan; Write-MRLog "Rodou Integridade do Sistema" }
-            "7" { Run-GodModeUnbrick; Write-MRLog "Rodou God Mode Unbrick" }
-            "8" {
-                Write-Host "Derrubando Proxy..." -ForegroundColor Yellow
-                Invoke-AutoRollback -FeatureName "Config_Internet" -RegKey "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
-                try { Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "ProxyServer" -Force -ErrorAction SilentlyContinue } catch {}
-                try { Get-Process | Where-Object { $_.Path -match "AppData|Temp" } | Stop-Process -Force -ErrorAction SilentlyContinue } catch {}
-                Write-MRLog "Iniciou Protocolo de Desinfeccao"
-                $r = Read-Host "Agendar varredura do Defender Offline no proximo Boot e reiniciar? (S/N)"
-                if ($r -match "^[sS]") { try { Start-MpWDOScan } catch {} }
-                Pause-MR
-            }
-            "9" {
-                Write-Host "Cacando Bloatware..." -ForegroundColor Yellow
-                $bloat = @("*CandyCrush*", "*TikTok*", "*McAfee*", "*Norton*")
-                foreach ($app in $bloat) { try { Get-AppxPackage -Name $app -AllUsers -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue } catch {} }
-                Write-MRLog "Rodou o Decrapifier de Bloatware"
-                Write-Host "Concluido." -ForegroundColor Green; Pause-MR
-            }
-            "10" { 
-                Invoke-AutoRollback -FeatureName "DataCollection" -RegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
-                try { Stop-Service DiagTrack -Force -ErrorAction SilentlyContinue; Set-Service DiagTrack -StartupType Disabled -ErrorAction SilentlyContinue; Write-Host "Telemetria Desativada." -ForegroundColor Green } catch {}
-                Write-MRLog "Desativou Telemetria"
-                Pause-MR 
-            }
-            "11" { 
-                Invoke-AutoRollback -FeatureName "Boot_VBS" -BcdBackup $true
-                try { bcdedit /set hypervisorlaunchtype off | Out-Null; Write-Host "VBS Off. Reinicie." -ForegroundColor Green } catch {}
-                Write-MRLog "Desativou VBS"
-                Pause-MR 
-            }
-            "12" { 
-                try { netsh winsock reset | Out-Null; ipconfig /flushdns | Out-Null; Write-Host "Rede recriada." -ForegroundColor Green } catch {}
-                Write-MRLog "Resetou Winsock"
-                Pause-MR 
-            }
-            "0" { return }
-            default { Write-Host "Opcao invalida." -ForegroundColor Red; Pause-MR }
-        }
-    } while ($true)
-}
-# -----------------------------------------------------------------------------
-# FASE 3: NETWORK DEEP SCAN E INTEGRIDADE DE KERNEL (SOC)
-# -----------------------------------------------------------------------------
-function Run-NetworkDeepScan {
-    Show-Header
-    Write-Host "=== NETWORK DEEP SCAN (AUDITORIA DE INFRAESTRUTURA) ===" -ForegroundColor Red
     Write-Host "Inspecionando portas abertas, rotas e túneis de rede...`n" -ForegroundColor Yellow
 
     Write-Host "[+] Portas Locais Escutando (Listening - Possiveis Backdoors):" -ForegroundColor Cyan
@@ -1352,6 +1335,24 @@ function Run-SystemIntegrityScan {
     
     Write-Host "`n* Nota: Arquivos corrompidos indicam possivel infeccao Rootkit ou dano grave no SO." -ForegroundColor Yellow
     Pause-MR
+}
+
+function Run-GodModeUnbrick {
+    Show-Header
+    Write-Host "=== GOD MODE UNBRICK (SALVA-VIDAS DE SISTEMA) ===" -ForegroundColor Green
+    
+    # ROLLBACK AUTOMATICO ANTES DE ALTERAR!
+    Invoke-AutoRollback -FeatureName "Policies_System_HKLM" -RegKey "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+    Invoke-AutoRollback -FeatureName "Policies_System_HKCU" -RegKey "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System"
+
+    Write-Host "Estourando cadeados de malware e GPOs corrompidas..." -ForegroundColor Yellow
+    $keys = @("HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\System", "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")
+    foreach ($k in $keys) {
+        try { if (-not (Test-Path $k)) { New-Item -Path $k -Force -ErrorAction SilentlyContinue | Out-Null } } catch {}
+        try { Set-ItemProperty -Path $k -Name "DisableTaskMgr" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "DisableRegistryTools" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "DisableCMD" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path $k -Name "NoFolderOptions" -Value 0 -ErrorAction SilentlyContinue } catch {}
+    }
+    try { Remove-Item "$env:windir\System32\GroupPolicy" -Recurse -Force -ErrorAction SilentlyContinue; gpupdate /force | Out-Null } catch {}
+    Write-Host "Paineis administrativos desalgemados!" -ForegroundColor Green; Pause-MR
 }
 
 function Open-TechMenu {
@@ -1620,7 +1621,7 @@ function Open-LanguageMenu {
                 Pause-MR 
             }
             "3" { 
-                Write-Host "`n[ROADMAP] A traducao nativa para o Espanhol esta em desenvolvimento e sera lancada exclusivamente na atualizacao v3.0 Global." -ForegroundColor Yellow
+                Write-Host "`n[ROADMAP] A traducao nativa para o Espanhol esta em desarrollo e sera lancada exclusivamente na atualizacao v3.0 Global." -ForegroundColor Yellow
                 Write-Host "La traduccion nativa al espanol esta en desarrollo y se lanzara en la actualizacion v3.0 Global." -ForegroundColor Cyan
                 Pause-MR 
             }
